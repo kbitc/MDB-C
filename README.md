@@ -9,3 +9,5 @@ Upper and lower case is used to differentiate between commands and categories, s
 More info later, I doubt anyone's reading yet.
 
 Plans to transcribe into VHDL after this.
+
+Each file is named after each section in the MDB protocol.
