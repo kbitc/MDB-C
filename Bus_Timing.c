@@ -1,5 +1,4 @@
 #include "Bus_Timing.h"
-#include <Particle.h>
 
 void chronoLogic(unsigned char command) {     //Command 0 to reset.  Command 1 to update timing variables.  Think of it like a stopwatch, but it updates flags rather than reporting a time.
 	if (!command) {

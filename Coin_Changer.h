@@ -10,61 +10,25 @@ struct {
     unsigned char Revalue = 0x06;
     unsigned char NegativeVend = 0x07;
   } status;                            //Device status labels.
-
 //Command Identification & Bitmasks
   struct {
 		unsigned char command = 0x08;
-	} reset;                                  //Page57
+	} reset;                                  //Page
 	struct {
 		unsigned char command = 0x09;
-		struct {
-			unsigned char command = 0x00;
-			struct {
-				unsigned char readerConfigData = 0x01;
-			} response;
-		} configData;			//Config Data subcommand & response. Page 10-12.
-		struct {				//Maintains consistent formatting.
-			unsigned char command = 0x01;    //Min/Max Prices subcommand. Page 12.
-		} maxMinPrices;
-	} setup;                             //Page 58-61
+	} setup;                             //Page 12-14
 	struct {
 		unsigned char command = 0x0b;
-		struct {
-			unsigned char justReset = 0x00;
-			unsigned char readerConfigInfo = 0x01;
-			unsigned char displayRequest = 0x02;
-			unsigned char beginSession = 0x03;
-			unsigned char sessionCancelRequest = 0x04;
-			unsigned char vendApproved = 0x05;
-			unsigned char vendDenied = 0x06;
-			unsigned char endSession = 0x07;
-			unsigned char cancelled = 0x08;
-			unsigned char peripheralID = 0x09;
-			unsigned char malfunctionError = 0x0a;
-			unsigned char cmdOutOfSequence = 0x0b;
-			unsigned char diagnosticResponse = 0xff;
-			unsigned char revalueApproved = 0x0d;
-			unsigned char revalueDenied = 0x0e;
-			unsigned char revalueLimitAmount = 0x0f;
-			unsigned char userFileData = 0x10;
-			unsigned char timeDateRequest = 0x11;
-			unsigned char dataEntryRequest = 0x12;
-			unsigned char dataEntryCancel = 0x13;
-			unsigned char oneAH = 0x14;
-			unsigned char reqToRcv = 0x1b;
-			unsigned char retryDeny = 0x1c;
-			unsigned char sendBlock = 0x1d;
-			unsigned char okToSend = 0x1e;
-			unsigned char reqToSend = 0x1f;
-			unsigned char feh = 0x20;
-		} response;                             //Page 62
-	} poll;                              //Page 63-77
+	} poll;                              //Page 15-18
 	struct {
     unsigned char command = 0x0a;
-  } tubeStatus;
+  } tubeStatus;                        //Page 14-15
   struct {
     unsigned char command = 0x0c;
-  } coinType;
+  } coinType;                          //Page 17-18
+  struct {
+    unsigned int command = 0x0d;
+  } dispense;                          //Page 19
 	struct {
 		unsigned char command = 0x0f;
 		struct {

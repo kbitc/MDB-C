@@ -1,16 +1,17 @@
 #include "Communication_Format.cpp"
 
+//7.2.1
+
 struct {
   union {
-    unsigned char Inactive = 0x1;
-    unsigned char Disabled = 0x2;
-    unsigned char Enabled = 0x03;
-    unsigned char SessionIdle = 0x04;
-    unsigned char Vend = 0x05;
-    unsigned char Revalue = 0x06;
-    unsigned char NegativeVend = 0x07;
-  } status;                            //Device status labels.
-
+    unsigned char inactive = 0x1;
+    unsigned char disabled = 0x2;
+    unsigned char enabled = 0x03;
+    unsigned char sessionIdle = 0x04;
+    unsigned char vend = 0x05;
+    unsigned char revalue = 0x06;
+    unsigned char negativeVend = 0x07;
+  } state;                            //Device state labels.
 //Command Identification & Bitmasks
   struct {
 		unsigned char command = 0x0;
@@ -41,7 +42,7 @@ struct {
 			unsigned char cancelled = 0x08;
 			unsigned char peripheralID = 0x09;
 			unsigned char malfunctionError = 0x0a;
-			unsigned char cmdOutOfSequence = 0x0b;
+			unsigned char commandOutOfSequence = 0x0b;
 			unsigned char diagnosticResponse = 0xff;
 			unsigned char revalueApproved = 0x0d;
 			unsigned char revalueDenied = 0x0e;
@@ -251,7 +252,7 @@ struct CashlessPaymentDevice{
       unsigned char refundInternalReaderCreditLost : 4 =0xcf;
     }error;
     //Poll.commandOutOfSequence Page 71
-    unsigned char status : 3;
+    unsigned char state : 3;
     //Poll.revalueDenied or Approved or limitAmount.  Page 71-73
     unsigned char revalueLimitAmount[3];
     //Poll.userFileData Page 73 OBSOLETE
@@ -308,106 +309,289 @@ struct CashlessPaymentDevice{
     unsigned char maximumLength;
     unsigned char vendAmount[3];
 
-//FLAGS
-  unsigned char displayRequest : 1;                 //Flag for when you have info to display on the vending screen.
+//FLAGS.  If MDB were a kernel, these would be the shell commands.  Setting a flag will get the action done at the appropriate time.
+  unsigned char displayRequest : 1;               //Flag for when you have info to display on the vending screen.
 	unsigned char displayDataPointer : 5;           //Makes calculating the message length bytes easier.
 	unsigned char beginSession : 1;                 //Flag for when you want to begin a session with the VMC.  Page 15.
 	unsigned char sessionCancelRequest : 1;         //Flag to set if you want to cancel an active session.
-    unsigned char errorCode;
-    unsigned char cmdOutOfSequence : 1;             //Self explanatory flag.
-    unsigned char justReset : 1;
-    unsigned char vendApproved : 1;
-    unsigned char vendDenied : 1;
-    unsigned char cancelled : 1;
-    unsigned char endSession : 1;
-    unsigned char peripheralID: 1;
-    unsigned char malfunctionError : 1;
-    unsigned char revalueDenied : 1;
-    unsigned char revalueApproved : 1;
-    unsigned char status : 1;
-    unsigned char revalueLimitAmount : 1;
-    unsigned char timeDateRequest : 1;
-    unsigned char dataEntryRequest : 1;
-    unsigned char dataEntryCancel : 1;
-    unsigned char reqToRcv : 1;
-    unsigned char reqToSend : 1;
-    unsigned char retryDeny : 1;
-    unsigned char sendBlock : 1;
-    unsigned char okToSend : 1;
-    unsigned char configData : 1;
-    unsigned char diagnosticResponse : 1;
-  	unsigned char isActive : 1;       //Flag set when device has been addressed, and reset when the VMC is done addressing the peripheral.
-  	unsigned char isBusy : 1;         //Flag set when device is busy doing something such as dispensing a coin, or connecting to a web service.
-  	unsigned char isOutgoing : 1;     //Flag set when device has information to send in response to the next poll (excluding ACKnowledge).
-  	unsigned char isOnline : 1;       //Flag set when device is online, reset when device is offline, meaning ignore all MDB activity.
-  	unsigned char isResetting : 1;    //Flag set when device recieves a reset command, and un-set when peripheral's reset completes.
-  	unsigned char isReset : 1;        //Flag set when device has been reset, but hasn't transmitted the 'JUST RESET' response yet.
+  unsigned char errorCode;                        //Flag for when there is an error code to report.
+  unsigned char commandOutOfSequence : 1;
+  unsigned char justReset : 1;
+  unsigned char vendApproved : 1;
+  unsigned char vendDenied : 1;
+  unsigned char cancelled : 1;
+  unsigned char endSession : 1;
+  unsigned char peripheralID: 1;
+  unsigned char malfunctionError : 1;
+  unsigned char revalueDenied : 1;
+  unsigned char revalueApproved : 1;
+  unsigned char revalueLimitAmount : 1;
+  unsigned char timeDateRequest : 1;
+  unsigned char dataEntryRequest : 1;
+  unsigned char dataEntryCancel : 1;
+  unsigned char reqToRcv : 1;
+  unsigned char reqToSend : 1;
+  unsigned char retryDeny : 1;
+  unsigned char sendBlock : 1;
+  unsigned char okToSend : 1;
+  unsigned char configData : 1;
+  unsigned char diagnosticResponse : 1;
+  unsigned char isActive : 1;       //Flag set when device has been addressed, and reset when the VMC is done addressing the peripheral.
+  unsigned char isBusy : 1;         //Flag set when device is busy doing something such as dispensing a coin, or connecting to a web service.
+  unsigned char isOutgoing : 1;     //Flag set when device has information to send in response to the next poll (excluding ACKnowledge).
+  unsigned char isOnline : 1;       //Flag set when device is online, reset when device is offline, meaning ignore all MDB activity.
+  unsigned char isResetting : 1;    //Flag set when device recieves a reset command, and un-set when peripheral's reset completes.
+  unsigned char isReset : 1;        //Flag set when device has been reset, but hasn't transmitted the 'JUST RESET' response yet.
 };                                    //Variables
 
-char startCashless1(int n){
-if (n == '1') {
+char startCashless(int n){
+  if (n == '1') {
   CashlessPaymentDevice cashless1;
   cashless1.address = 0x10;
-  cashless1.state = cashless.stateInactive;
-}
-if (n == '2') {
+  cashless1.state = cashless.state.inactive;
+  }
+  if (n == '2') {
   CashlessPaymentDevice cashless2;
   cashless2.address = 0x60;
-  cashless2.state = cashless.stateInactive;
-}
+  cashless2.state = cashless.state.inactive;
+  }
   return 0;
 };        //Input number of cashless device you wish to start.
 
 
 void StateMonitor() {  //Page 49-50, Section 7.2
-    if (cashless1.status == cashless.stateInactive) {
-        if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))   //No byte will reach here with result 6 if not for you.  Check the command.
-            rESET(1);
+    if (cashless1.state == cashless.state.inactive) {
+        if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))   //Result 6 means incoming command is addressed to a cashless device.
+            RESET(1);
         if ((block[0].command == cashless.setup.command) && (block[0].part.mode == 0x01) && (result == 6))
-            sETUP(1);
+            SETUP(1);
         if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
-            pOLL(1);
-    }
-    if (cashless1.status == cashless.stateDisabled) {
-        if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
-            rEADER();
-        if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
-            rESET();
-        if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
-            pOLL();
-        if ((block[0].command == cashless.setup.command) && (block[0].part.mode == 0x01) && (result == 6))
-            sETUP();
-    }
-    if (cashless1.status == cashless.stateEnabled) {
+            POLL(1);
         if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
-            vEND();
+            cashless1.commandOutOfSequence = 0x0;
         if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
-            rEVALUE();
+            cashless1.commandOutOfSequence = 0x0;
         if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
-            eXPANSION();
-        if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
-            pOLL();
+            cashless1.commandOutOfSequence = 0x0;
+        if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+        if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
     }
-    if (cashless1.status == cashless.stateSessionIdle);
-    if (cashless1.status == cashless.stateVend);
-    if (cashless1.status == cashless.stateRevalue);
-    if (cashless1.status == cashless.stateNegativeVend);
+    if (cashless1.state == cashless.state.disabled) {
+        if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+            READER(1);
+        if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+            RESET()1;
+        if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+            POLL(1);
+        if ((block[0].command == cashless.setup.command) && (block[0].part.mode == 0x01) && (result == 6))
+            SETUP(1);
+        if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+        if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+        if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+        if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+    }
+    if (cashless1.state == cashless.state.enabled) {
+        if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+            VEND(1);
+        if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+            REVALUE(1);
+        if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+            EXPANSION(1);
+        if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+            POLL(1);
+        if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+            RESET(1);
+        if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+        if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+        if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+            cashless1.commandOutOfSequence = 0x0;
+    }
+    if (cashless1.state == cashless.state.sessionIdle) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          VEND(1);
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          REVALUE(1);
+      if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+          POLL(1);
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          NEGATIVEVEND(1);
+      if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+          RESET(1);
+      if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+    }
+    if (cashless1.state == cashless.state.vend) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+    }
+    if (cashless1.state == cashless.state.revalue) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+    }
+    if (cashless1.state == cashless.state.negativeVend) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless1.commandOutOfSequence = 0x0;
+    }
+    if (cashless2.state == cashless.state.inactive) {
+        if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))   //No byte will reach here with result 6 if not for you.  Check the command.
+            RESET(2);
+        if ((block[0].command == cashless.setup.command) && (block[0].part.mode == 0x01) && (result == 6))
+            SETUP(2);
+        if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+            POLL(2);
+    }
+    if (cashless2.state == cashless.state.disabled) {
+        if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+            READER(2);
+        if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+            RESET(2);
+        if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+            POLL(2);
+        if ((block[0].command == cashless.setup.command) && (block[0].part.mode == 0x01) && (result == 6))
+            SETUP(2);
+    }
+    if (cashless2.state == cashless.state.enabled) {
+        if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+            VEND(2);
+        if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+            REVALUE(2);
+        if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+            EXPANSION(2);
+        if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+            POLL(2);
+    }
+    if (cashless2.state == cashless.state.sessionIdle) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          VEND(2);
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          REVALUE(2);
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          NEGATIVEVEND(2);
+    }
+    if (cashless2.state == cashless.state.vend) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+    }
+    if (cashless2.state == cashless.state.revalue) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+    }
+    if (cashless2.state == cashless.state.negativeVend) {
+      if ((block[0].command == cashless.vend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.revalue.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.poll.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.reader.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.negativeVend.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+      if ((block[0].command == cashless.expansion.command) && (block[0].part.mode == 0x01) && (result == 6))
+          cashless2.commandOutOfSequence = 0x0;
+    }
 }
 
 void resetPeripheral(int n) {                      //Reset flags and other nonessential values.
   if (n == '1') {
-    cashless1.displayRequest = 0x0;                //Flag for when you have info to display on the vending screen.
-  	cashless1.beginSession = 0x00;                 //Flag for when you want to begin a session with the VMC.  Page 15.
-  	cashless1.sessionCancelRequest = 0x00;         //Flag to set if you want to cancel an active session.
-    cashless1.cmdOutOfSequence = 0x00;             //Self explanatory flag.
-    cashless1.state = cashless.stateInactive;
+    cashless1.displayRequest = 0x1;                //Flag for when you have info to display on the vending screen.
+  	cashless1.beginSession = 0x1;                  //Flag for when you want to begin a session with the VMC.  Page 15.
+  	cashless1.sessionCancelRequest = 0x1;          //Flag to set if you want to cancel an active session.
+    cashless1.commandOutOfSequence = 0x1;          //Self explanatory flag.
+    cashless1.state = cashless.state.inactive;
   };
   if (n == '2') {
-    cashless2.displayRequest = 0x0;                //Flag for when you have info to display on the vending screen.
-  	cashless2.beginSession = 0x00;                 //Flag for when you want to begin a session with the VMC.  Page 15.
-  	cashless2.sessionCancelRequest = 0x00;         //Flag to set if you want to cancel an active session.
-    cashless2.cmdOutOfSequence = 0x00;             //Self explanatory flag.
-    cashless2.state = cashless.stateInactive;
+    cashless2.displayRequest = 0x1;                //Flag for when you have info to display on the vending screen.
+  	cashless2.beginSession = 0x1;                  //Flag for when you want to begin a session with the VMC.  Page 15.
+  	cashless2.sessionCancelRequest = 0x1;          //Flag to set if you want to cancel an active session.
+    cashless2.commandOutOfSequence = 0x1;          //Self explanatory flag.
+    cashless2.state = cashless.state.inactive;
   };
 }
 
@@ -482,36 +666,39 @@ int displayCancel(String data) {
 }
 
 
-void rESET(int n) {                      //Puts the state inactive and loads the sequence.  Page 57
-    if (n == '1')
-      cashless1.state = cashless.stateInactive;
-    else if (n = '2')
-      cashless2.state = cashless.stateInactive;
+void RESET(int n) {
+    if (n == '1') {
+      cashless1.state = cashless.state.inactive;
+    }
+    else if (n = '2') {
+      cashless2.state = cashless.state.inactive;
+    }
     Serial1.write(0x100);           //No response comes from VMC so sending ACK this way is the most efficient.
     chronoLogic(0);                 //Resettimer for the 200ms or so allowed for resetting.  Chronologic may need to be adjusted to time two devices.
     resetPeripheral(n);
-    peripheral1.isActive = 0x01;
-    peripheral1.isBusy = 0x01;
-    peripheral1.isOnline = 0x01;        //Indicates that the MDB device is accepting commands.
-    peripheral1.isResetting = 0x01;     //Indicates that the peripheral is resetting.
-    peripheral1.isReset = 0x01;         //Indicates peripheral is done resetting but the VMC doesn't know yet.
-    transmission.isUnresponsive = 0x01;
-    transmission.isDone = 0x00;
-    transmission.isActive = 0x01;      //No current BUS RESET is occuring.
-	  cashless1.displayRequest = 0x0;               //Flag for when you have info to display on the vending screen.
-	  cashless1.beginSession = 0x00;                 //Flag for when you want to begin a session with the VMC.  Page 15.
-	  cashless1.sessionCancelRequest = 0x00;         //Flag to set if you want to cancel an active session.
-    cashless.cmdOutOfSequence = 0x00;             //Self explanatory flag.
-    cashless.justReset = 0x01;
+    peripheral1.isActive = 0x1;
+    peripheral1.isBusy = 0x1;
+    peripheral1.isOnline = 0x1;        //Indicates that the MDB device is accepting commands.
+    peripheral1.isResetting = 0x1;     //Indicates that the peripheral is resetting.
+    peripheral1.isReset = 0x1;         //Indicates peripheral is done resetting but the VMC doesn't know yet.
+    transmission.isUnresponsive = 0x1;
+    transmission.isDone = 0x1;
+    transmission.isActive = 0x1;      //No current BUS RESET is occuring.
+	  cashless1.displayRequest = 0x1;               //Flag for when you have info to display on the vending screen.
+	  cashless1.beginSession = 0x1;                 //Flag for when you want to begin a session with the VMC.  Page 15.
+	  cashless1.sessionCancelRequest = 0x1;         //Flag to set if you want to cancel an active session.
+    cashless.cmdOutOfSequence = 0x1;             //Self explanatory flag.
+    cashless.justReset = 0x0;
     counter = 0;
     result = 0;
     pointer = 0;
     clearBlock();                   //Empty/reset the data block.
-    while (transmission.isResetting)
+    while (transmission.isResetting) {
         chronoLogic(1);
-}
+    }
+}                        //Page 57
 
-void pOLL(int n) {
+void POLL(int n) {
     if (n == '1') {
       if (cashless1.justReset) {            //If the peripheral has finished resetting.
           clearBlock();
@@ -519,7 +706,7 @@ void pOLL(int n) {
           pointer = 1;
           tX();
           clearBlock();
-          cashless1.justReset = 0x00;
+          cashless1.justReset = 0x1;
       }
       else if (cashless1.displayRequest) {  //If cashless device requests to display on the Vending Machine's screen.
           block[0].whole = cashless.poll.response.displayRequest;
@@ -563,6 +750,7 @@ void pOLL(int n) {
           return;
       }          //Requests to display data.
       else if (cashless1.beginSession) {
+          cashless1.state = cashless.state.sessionIdle
           block[0].whole = cashless.poll.response.beginSession;
           block[1].whole = cashless1.fundsAvailable[0];    //Scaled Currency.
           block[2].whole = cashless1.fundsAvailable[1];
@@ -586,7 +774,7 @@ void pOLL(int n) {
               }
           }
           tX();
-          cashless1.beginSession = 0x00;
+          cashless1.beginSession = 0x1;
       }            //Begins a Vend session.
       else if (cashless1.sessionCancelRequest) {
           clearBlock();
@@ -761,245 +949,246 @@ void pOLL(int n) {
       clearBlock();
     };
     else if (n == '2') {
-      if (cashless1.justReset) {            //If the peripheral has finished resetting.
+      if (cashless2.justReset) {            //If the peripheral has finished resetting.
           clearBlock();
           block[0].part.data = cashless.poll.response.justReset;
           pointer = 1;
           tX();
           clearBlock();
-          cashless1.justReset = 0x00;
+          cashless2.justReset = 0x1;
       }
-      else if (cashless1.displayRequest) {  //If cashless device requests to display on the Vending Machine's screen.
+      else if (cashless2.displayRequest) {  //If cashless device requests to display on the Vending Machine's screen.
           block[0].whole = cashless.poll.response.displayRequest;
-          block[1].whole = cashless1.displayTime;
-          block[2].whole = cashless1.displayData[0];
-          block[3].whole = cashless1.displayData[1];
-          block[4].whole = cashless1.displayData[2];
-          block[5].whole = cashless1.displayData[3];
-          block[6].whole = cashless1.displayData[4];
-          block[7].whole = cashless1.displayData[5];
-          block[8].whole = cashless1.displayData[6];
-          block[9].whole = cashless1.displayData[7];
-          block[10].whole = cashless1.displayData[8];
-          block[11].whole = cashless1.displayData[9];
-          block[12].whole = cashless1.displayData[10];
-          block[13].whole = cashless1.displayData[11];
-          block[14].whole = cashless1.displayData[12];
-          block[15].whole = cashless1.displayData[13];
-          block[16].whole = cashless1.displayData[14];
-          block[17].whole = cashless1.displayData[15];
-          block[18].whole = cashless1.displayData[16];
-          block[19].whole = cashless1.displayData[17];
-          block[20].whole = cashless1.displayData[18];
-          block[21].whole = cashless1.displayData[19];
-          block[22].whole = cashless1.displayData[20];
-          block[23].whole = cashless1.displayData[21];
-          block[24].whole = cashless1.displayData[22];
-          block[25].whole = cashless1.displayData[23];
-          block[26].whole = cashless1.displayData[24];
-          block[27].whole = cashless1.displayData[25];
-          block[28].whole = cashless1.displayData[26];
-          block[29].whole = cashless1.displayData[27];
-          block[30].whole = cashless1.displayData[28];
-          block[31].whole = cashless1.displayData[29];
-          block[32].whole = cashless1.displayData[30];
-          block[33].whole = cashless1.displayData[31];
-          pointer = (cashless1.columnsOnDisplay * cashless1.rowsOnDisplay);
+          block[1].whole = cashless2.displayTime;
+          block[2].whole = cashless2.displayData[0];
+          block[3].whole = cashless2.displayData[1];
+          block[4].whole = cashless2.displayData[2];
+          block[5].whole = cashless2.displayData[3];
+          block[6].whole = cashless2.displayData[4];
+          block[7].whole = cashless2.displayData[5];
+          block[8].whole = cashless2.displayData[6];
+          block[9].whole = cashless2.displayData[7];
+          block[10].whole = cashless2.displayData[8];
+          block[11].whole = cashless2.displayData[9];
+          block[12].whole = cashless2.displayData[10];
+          block[13].whole = cashless2.displayData[11];
+          block[14].whole = cashless2.displayData[12];
+          block[15].whole = cashless2.displayData[13];
+          block[16].whole = cashless2.displayData[14];
+          block[17].whole = cashless2.displayData[15];
+          block[18].whole = cashless2.displayData[16];
+          block[19].whole = cashless2.displayData[17];
+          block[20].whole = cashless2.displayData[18];
+          block[21].whole = cashless2.displayData[19];
+          block[22].whole = cashless2.displayData[20];
+          block[23].whole = cashless2.displayData[21];
+          block[24].whole = cashless2.displayData[22];
+          block[25].whole = cashless2.displayData[23];
+          block[26].whole = cashless2.displayData[24];
+          block[27].whole = cashless2.displayData[25];
+          block[28].whole = cashless2.displayData[26];
+          block[29].whole = cashless2.displayData[27];
+          block[30].whole = cashless2.displayData[28];
+          block[31].whole = cashless2.displayData[29];
+          block[32].whole = cashless2.displayData[30];
+          block[33].whole = cashless2.displayData[31];
+          pointer = (cashless2.columnsOnDisplay * cashless2.rowsOnDisplay);
           tX();
-          cashless1.displayRequest = 0;
+          cashless2.displayRequest = 0;
           clearBlock();
           return;
       }          //Requests to display data.
-      else if (cashless1.beginSession) {
+      else if (cashless2.beginSession) {
+          cashless2.state = cashless.state.sessionIdle;
           block[0].whole = cashless.poll.response.beginSession;
-          block[1].whole = cashless1.fundsAvailable[0];    //Scaled Currency.
-          block[2].whole = cashless1.fundsAvailable[1];
+          block[1].whole = cashless2.fundsAvailable[0];    //Scaled Currency.
+          block[2].whole = cashless2.fundsAvailable[1];
           pointer = 3;
-          if (cashless1.vmcFeatureLevel >= (0x02)) {
-              block[3].whole = cashless1.paymentMediaID[0];
-              block[4].whole = cashless1.paymentMediaID[1];
-              block[5].whole = cashless1.paymentMediaID[2];
-              block[6].whole = cashless1.paymentMediaID[3];
-              block[7].whole = cashless1.paymentType;
-              block[8].whole = cashless1.paymentData[0];
-              block[9].whole = cashless1.paymentData[1];
+          if (cashless2.vmcFeatureLevel >= (0x02)) {
+              block[3].whole = cashless2.paymentMediaID[0];
+              block[4].whole = cashless2.paymentMediaID[1];
+              block[5].whole = cashless2.paymentMediaID[2];
+              block[6].whole = cashless2.paymentMediaID[3];
+              block[7].whole = cashless2.paymentType;
+              block[8].whole = cashless2.paymentData[0];
+              block[9].whole = cashless2.paymentData[1];
               pointer = 10;
-              if (cashless1.vmcFeatureLevel == (0x03)) {
-                  block[10].whole = cashless1.userLanguage[0];
-                  block[11].whole = cashless1.userLanguage[1];
-                  block[12].whole = cashless1.userCurrencyCode[0];
-                  block[13].whole = cashless1.userCurrencyCode[1];
-                  block[14].whole = cashless1.cardOptions;
+              if (cashless2.vmcFeatureLevel == (0x03)) {
+                  block[10].whole = cashless2.userLanguage[0];
+                  block[11].whole = cashless2.userLanguage[1];
+                  block[12].whole = cashless2.userCurrencyCode[0];
+                  block[13].whole = cashless2.userCurrencyCode[1];
+                  block[14].whole = cashless2.cardOptions;
                   pointer = 15;
               }
           }
           tX();
-          cashless1.beginSession = 0x00;
+          cashless2.beginSession = 0x1;
       }            //Begins a Vend session.
-      else if (cashless.sessionCancelRequest) {
+      else if (cashless2.sessionCancelRequest) {
           clearBlock();
           block[0].part.data = cashless.poll.response.sessionCancelRequest;
           pointer = 1;
           result = tX();
           if (block[0].part.data == ack) {
-              cashless.sessionCancelRequest = 0x00;
+              cashless2.sessionCancelRequest = 0x00;
           }
       }    //Cancels a Vend session.
-      else if (cashless.vendApproved) {
+      else if (cashless2.vendApproved) {
           block[0].whole = cashless.poll.response.vendApproved;
-          block[1].whole = cashless.vendAmount[0];
-          block[2].whole = cashless.vendAmount[1];
+          block[1].whole = cashless2.vendAmount[0];
+          block[2].whole = cashless2.vendAmount[1];
           pointer = 3;
-          if (cashless.vmcFeatureLevel == 0x03) {
-              block[3].whole = cashless.vendAmount[2];
-              block[4].whole = cashless.vendAmount[3];
+          if (cashless2.vmcFeatureLevel == 0x03) {
+              block[3].whole = cashless2.vendAmount[2];
+              block[4].whole = cashless2.vendAmount[3];
               pointer = 5;
           }
           tX();
-          cashless.vendApproved = 0x00;
+          cashless2.vendApproved = 0x00;
       }            //Approves a vend.
-      else if (cashless.vendDenied) {
+      else if (cashless2.vendDenied) {
           block[0].whole = cashless.poll.response.vendDenied;
           pointer = 1;
           tX();
-          cashless.vendDenied = 0;
+          cashless2.vendDenied = 0;
       }              //Denies a vend.
-      else if (cashless.endSession) {
+      else if (cashless2.endSession) {
           block[0].whole = cashless.poll.response.endSession;
           pointer = 1;
           tX();
       }              //Indicates the reader has returned to the enabled state, follows Session Cancel.
-      else if (cashless.cancelled) {
+      else if (cashless2.cancelled) {
           block[0].whole = cashless.poll.response.cancelled;
           pointer = 1;
           tX();
-          cashless.cancelled = 0;
+          cashless2.cancelled = 0;
       }               //Aborts READER activities which occur in the enabled state.
-      else if (cashless.peripheralID) {
+      else if (cashless2.peripheralID) {
           block[0].whole = cashless.poll.response.peripheralID;
-          block[1].whole = cashless.readerManufacturerCode[0];
-          block[2].whole = cashless.readerManufacturerCode[1];
-          block[3].whole = cashless.readerManufacturerCode[3];
+          block[1].whole = cashless2.readerManufacturerCode[0];
+          block[2].whole = cashless2.readerManufacturerCode[1];
+          block[3].whole = cashless2.readerManufacturerCode[3];
           counter = 0;
           while (counter != 11) {
-              block[counter + 4].whole = cashless.readerSerialNumber[counter];
-              block[counter + 16].whole = cashless.readerModelNumber[counter];
+              block[counter + 4].whole = cashless2.readerSerialNumber[counter];
+              block[counter + 16].whole = cashless2.readerModelNumber[counter];
               counter++;
           }
-          block[28].whole = cashless.readerSoftwareVersion[0];
-          block[29].whole = cashless.readerSoftwareVersion[1];
+          block[28].whole = cashless2.readerSoftwareVersion[0];
+          block[29].whole = cashless2.readerSoftwareVersion[1];
           pointer = 30;
-          if ((cashless.vmcFeatureLevel == 0x3) && (cashless.vmcFeatureLevel == 0x3) && (/*optional Feature bits enabled by VMC*/0x01)) { /////////////////////////////////
-              block[30].whole = cashless.optionalFeatureBits[0];
-              block[31].whole = cashless.optionalFeatureBits[1];
-              block[32].whole = cashless.optionalFeatureBits[2];
-              block[33].whole = cashless.optionalFeatureBits[3];
+          if ((cashless2.vmcFeatureLevel == 0x3) && (cashless2.readerFeatureLevel == 0x3) && (/*optional Feature bits enabled by VMC*/0x01)) { /////////////////////////////////
+              block[30].whole = cashless2.optionalFeatureBits[0];
+              block[31].whole = cashless2.optionalFeatureBits[1];
+              block[32].whole = cashless2.optionalFeatureBits[2];
+              block[33].whole = cashless2.optionalFeatureBits[3];
               pointer = 34;
           }
           tX();
       }            //Response to cashless.expansion.peripheralID.command
-      else if (cashless.malfunctionError) {
+      else if (cashless2.malfunctionError) {
           block[0].whole = cashless.poll.response.malfunctionError;
-          block[1].whole = cashless.errorCode;
+          block[1].whole = cashless2.errorCode;
           pointer = 2;
           tX();
       }        //Reports an error or malfunction to the VMC.
-      else if (cashless.cmdOutOfSequence) {
+      else if (cashless2.cmdOutOfSequence) {
           block[0].whole = cashless.poll.response.cmdOutOfSequence;
           pointer = 1;
-          if ((cashless.vmcFeatureLevel >= 2) && (cashless.readerFeatureLevel >= 2)) {
-              block[1].whole = cashless.status;
+          if ((cashless2.vmcFeatureLevel >= 2) && (cashless2.readerFeatureLevel >= 2)) {
+              block[1].whole = cashless2.state;
               pointer = 2;
           }
           tX();
       }        //Tells the VMC that a command was sent out of sequence.
-      else if (cashless.revalueApproved) {
+      else if (cashless2.revalueApproved) {
 
       }         //     revalue involves putting money back onto a cashless payment source.
-      else if (cashless.revalueDenied) {
+      else if (cashless2.revalueDenied) {
 
       }           //
-      else if (cashless.revalueLimitAmount) {
+      else if (cashless2.revalueLimitAmount) {
 
       }      //
-      /*else if (cashless.userFileData) {
+      /*else if (cashless2.userFileData) {
           Do not use, obsolete.
       }          //Obsolete command.*/
-      else if (cashless.timeDateRequest) {
+      else if (cashless2.timeDateRequest) {
           block[0].whole = cashless.poll.response.timeDateRequest;
           pointer = 1;
           tX();
       }         //Request time/date from VMC.
-      else if (cashless.dataEntryRequest) {  //Request input from machine Keypad.
+      else if (cashless2.dataEntryRequest) {  //Request input from machine Keypad.
           block[0].whole = cashless.poll.response.dataEntryRequest;
-          block[1].whole = cashless.dataEntryLengthAndRepeatBit;
+          block[1].whole = cashless2.dataEntryLengthAndRepeatBit;
           pointer = 2;
           tX();
       }        //Request input from VMC Keypad.
-      else if (cashless.dataEntryCancel) {
+      else if (cashless2.dataEntryCancel) {
           block[0].whole = cashless.poll.response.dataEntryCancel;
           pointer = 1;
           tX();
       }         //Cancel input session.
-      else if (cashless.reqToRcv) {
+      else if (cashless2.reqToRcv) {
           block[0].whole = cashless.poll.response.reqToRcv;
-          block[1].whole = cashless.ftlDestinationAddress;
-          block[2].whole = peripheral.address;
-          block[3].whole = cashless.ftlFileID;
-          block[4].whole = cashless.ftlMaximumLength;
-          block[5].whole = cashless.ftlControl;
+          block[1].whole = cashless2.ftlDestinationAddress;
+          block[2].whole = cashless2.address;
+          block[3].whole = cashless2.ftlFileID;
+          block[4].whole = cashless2.ftlMaximumLength;
+          block[5].whole = cashless2.ftlControl;
           pointer = 6;
           tX();
       }                //File Transport Layer
-      else if (cashless.retryDeny) {
+      else if (cashless2.retryDeny) {
           block[0].whole = cashless.poll.response.retryDeny;
-          block[1].whole = cashless.ftlDestinationAddress;
-          block[2].whole = peripheral.address;
-          block[3].whole = cashless.ftlRetryDeny;
+          block[1].whole = cashless2.ftlDestinationAddress;
+          block[2].whole = cashless2.address;
+          block[3].whole = cashless2.ftlRetryDeny;
           pointer = 4;
           tX();
       }               //File Transport Layer
-      else if (cashless.sendBlock) {
+      else if (cashless2.sendBlock) {
           block[0].whole = cashless.poll.response.sendBlock;
-          block[1].whole = cashless.destinationAddress;
-          block[2].whole = cashless.blockNumber;
-          block[3].whole = cashless.ftlData;
+          block[1].whole = cashless2.destinationAddress;
+          block[2].whole = cashless2.blockNumber;
+          block[3].whole = cashless2.ftlData;
           pointer = 4;
           tX();
       }               //File Transport Layer
-      else if (cashless.okToSend) {
+      else if (cashless2.okToSend) {
           block[0].whole = cashless.poll.response.okToSend;
-          block[1].whole = cashless.destinationAddress;
-          block[2].whole = peripheral.address;
+          block[1].whole = cashless2.destinationAddress;
+          block[2].whole = cashless2.address;
           pointer = 3;
           tX();
       }                //File transport Layer
-      else if (cashless.reqToSend) {
+      else if (cashless2.reqToSend) {
           block[0].whole = cashless.poll.response.reqToSend;
-          block[1].whole = cashless.destinationAddress;
-          block[2].whole = peripheral.address;
-          block[3].whole = cashless.fileID;
-          block[4].whole = cashless.maximumLength;
-          block[5].whole = cashless.control;
+          block[1].whole = cashless2.destinationAddress;
+          block[2].whole = cashless2.address;
+          block[3].whole = cashless2.fileID;
+          block[4].whole = cashless2.maximumLength;
+          block[5].whole = cashless2.control;
           pointer = 6;
           tX();
       }               //File Transport Layer
-      else if (cashless.diagnosticResponse) {
+      else if (cashless2.diagnosticResponse) {
 
       }      //
-      else if (cashless.configData) { //CONFIG DATA... I assume this is for compatibility, we don't use this.  Page 14.
+      else if (cashless2.configData) { //CONFIG DATA... I assume this is for compatibility, we don't use this.  Page 14.
           block[0].part.data = cashless.poll.response.readerConfigData;   //Lets the VMC know you are replying to CONFIG-DATA.
-      block[1].part.data = cashless.readerFeatureLevel;  //Tells VMC device supports Level 3.    Page-10
-      block[2].part.data = cashless.countryCurrencyCode[0];  //First half of US country code.        Page-11
-      block[3].part.data = cashless.countryCurrencyCode[1];  //Second half of US country code.       Page-11
-      if ((cashless.vmcFeatureLevel == 0x03) && (cashless.readerFeatureLevel == 0x03)) {  //IF VMC supports Level 3 MDB.       Page-11
+      block[1].part.data = cashless2.readerFeatureLevel;  //Tells VMC device supports Level 3.    Page-10
+      block[2].part.data = cashless2.countryCurrencyCode[0];  //First half of US country code.        Page-11
+      block[3].part.data = cashless2.countryCurrencyCode[1];  //Second half of US country code.       Page-11
+      if ((cashless2.vmcFeatureLevel == 0x03) && (cashless2.readerFeatureLevel == 0x03)) {  //IF VMC supports Level 3 MDB.       Page-11
           block[2].part.data = (0x18);  //THEN use ISO4217 country code.    Page-11
           block[3].part.data = (0x40);  //Second half of ISO4217 code.      Page-11
       }
       block[4].part.data = (0x01);  //Sets coin scale to 1 for pennies.     Page-11
       block[5].part.data = (0x02);  //Sets decimal places up for cents.     Page-11
-      block[6].part.data = cashless.applicationMaximumResponseTime;  //Sets maximum response time.      Page-12
-      block[7].part.data = cashless.miscellaneousOptions;  //Sets refunds, multivend, display, and sales reporting.  Page-12
+      block[6].part.data = cashless2.applicationMaximumResponseTime;  //Sets maximum response time.      Page-12
+      block[7].part.data = cashless2.miscellaneousOptions;  //Sets refunds, multivend, display, and sales reporting.  Page-12
       block[8].part.mode = (0x01);  //Set data length.
       pointer = 9;
       tX();  //Transmit Setup response block.
@@ -1007,79 +1196,124 @@ void pOLL(int n) {
       else
           Serial1.write(0x100);
       clearBlock();
-    }
+    };
 }
 
-void sETUP() {                          //Pages 10-13.
-    peripheral.isActive = 1;
+void SETUP(int n) {
+  if (n == '1') {
+    cashless1.isActive = 0x0;
     if (block[1].part.data == cashless.setup.configData.command) {
-    cashless.vmcFeatureLevel = block[2].part.data;  //Retrieve VMC's supported MDB Level.  Page-10
-    cashless.columnsOnDisplay = block[3].part.data;  //Retrieve display dimensions.   Page-10
-    cashless.rowsOnDisplay = block[4].part.data;  //Retrieve display dimensions.      Page-10
-    cashless.displayType = block[5].part.data;  //0=Seven Segment, 1=ASCII.       Page-10
+    cashless1.vmcFeatureLevel = block[2].part.data;  //Retrieve VMC's supported MDB Level.  Page-10
+    cashless1.columnsOnDisplay = block[3].part.data;  //Retrieve display dimensions.   Page-10
+    cashless1.rowsOnDisplay = block[4].part.data;  //Retrieve display dimensions.      Page-10
+    cashless1.displayType = block[5].part.data;  //0=Seven Segment, 1=ASCII.       Page-10
     clearBlock();
     block[0].part.data = cashless.setup.configData.response.readerConfigData;   //Lets the VMC know you are replying to CONFIG-DATA.
-    block[1].part.data = cashless.readerFeatureLevel;  //Tells VMC device supports Level 3.    Page-10
-    block[2].part.data = cashless.countryCurrencyCode[0];  //First half of US country code.        Page-11
-    block[3].part.data = cashless.countryCurrencyCode[1];  //Second half of US country code.       Page-11
+    block[1].part.data = cashless1.readerFeatureLevel;  //Tells VMC device supports Level 3.    Page-10
+    block[2].part.data = cashless1.countryCurrencyCode[0];  //First half of US country code.        Page-11
+    block[3].part.data = cashless1.countryCurrencyCode[1];  //Second half of US country code.       Page-11
     if ((cashless.vmcFeatureLevel == 0x03) && (cashless.readerFeatureLevel == 0x03)) {  //IF VMC supports Level 3 MDB.       Page-11
-        block[2].part.data = cashless.countryCurrencyCodeLevel3[0];  //THEN use ISO4217 country code.    Page-11
-        block[3].part.data = cashless.countryCurrencyCodeLevel3[1];  //Second half of ISO4217 code.      Page-11
+        block[2].part.data = cashless1.countryCurrencyCodeLevel3[0];  //THEN use ISO4217 country code.    Page-11
+        block[3].part.data = cashless1.countryCurrencyCodeLevel3[1];  //Second half of ISO4217 code.      Page-11
     }
-    block[4].part.data = cashless.scaleFactor;  //Sets the scale factor for the currency.     Page-11
-    block[5].part.data = cashless.decimalPlaces;  //Sets decimal places up for cents.     Page-11
-    block[6].part.data = cashless.applicationMaximumResponseTime;  //Sets maximum response time.      Page-12
-    block[7].part.data = cashless.miscellaneousOptions;  //Sets refunds, multivend, display, and sales reporting.  Page-12
+    block[4].part.data = cashless1.scaleFactor;  //Sets the scale factor for the currency.     Page-11
+    block[5].part.data = cashless1.decimalPlaces;  //Sets decimal places up for cents.     Page-11
+    block[6].part.data = cashless1.applicationMaximumResponseTime;  //Sets maximum response time.      Page-12
+    block[7].part.data = cashless1.miscellaneousOptions;  //Sets refunds, multivend, display, and sales reporting.  Page-12
     pointer = 8;
     tX();  //Transmit Setup response block.
-    peripheral.isActive = 0;
+    cashless1.isActive = 0;
     return;
     }
     if (block[1].part.data == cashless.setup.maxMinPrices.command) {
-        if ((cashless.state == cashless.stateDisabled) && (cashless.vmcFeatureLevel == 0x03)) {
-        cashless.maximumPrice[0] = block[2].part.data;  //Scaled maximum price.                Page-12
-        cashless.maximumPrice[1] = block[3].part.data;  //Second half of max price.            Page-12
-        cashless.maximumPrice[2] = block[4].part.data;  //Scaled minimum price.                Page-12
-        cashless.maximumPrice[3] = block[5].part.data;  //Second half of min price.            Page-12
-        cashless.minimumPrice[0] = block[6].part.data;  //Scaled maximum price.                Page-12
-        cashless.minimumPrice[1] = block[7].part.data;  //Second half of max price.            Page-12
-        cashless.minimumPrice[2] = block[8].part.data;  //Scaled minimum price.                Page-12
-        cashless.minimumPrice[3] = block[9].part.data;  //Second half of min price.            Page-12
-        cashless.countryCurrencyCode[0] = block[10].part.data;
-        cashless.countryCurrencyCode[1] = block[11].part.data;
+        if ((cashless1.state == cashless.state.disabled) && (cashless1.vmcFeatureLevel == 0x03)) {
+        cashless1.maximumPrice[0] = block[2].part.data;  //Scaled maximum price.                Page-12
+        cashless1.maximumPrice[1] = block[3].part.data;  //Second half of max price.            Page-12
+        cashless1.maximumPrice[2] = block[4].part.data;  //Scaled minimum price.                Page-12
+        cashless1.maximumPrice[3] = block[5].part.data;  //Second half of min price.            Page-12
+        cashless1.minimumPrice[0] = block[6].part.data;  //Scaled maximum price.                Page-12
+        cashless1.minimumPrice[1] = block[7].part.data;  //Second half of max price.            Page-12
+        cashless1.minimumPrice[2] = block[8].part.data;  //Scaled minimum price.                Page-12
+        cashless1.minimumPrice[3] = block[9].part.data;  //Second half of min price.            Page-12
+        cashless1.countryCurrencyCode[0] = block[10].part.data;
+        cashless1.countryCurrencyCode[1] = block[11].part.data;
         }
         else {
-        cashless.maximumPrice[0] = block[2].part.data;  //Scaled maximum price.                Page-12
-        cashless.maximumPrice[1] = block[3].part.data;  //Second half of max price.            Page-12
-        cashless.minimumPrice[0] = block[4].part.data;  //Scaled minimum price.                Page-12
-        cashless.minimumPrice[1] = block[5].part.data;  //Second half of min price.            Page-12
+        cashless1.maximumPrice[0] = block[2].part.data;  //Scaled maximum price.                Page-12
+        cashless1.maximumPrice[1] = block[3].part.data;  //Second half of max price.            Page-12
+        cashless1.minimumPrice[0] = block[4].part.data;  //Scaled minimum price.                Page-12
+        cashless1.minimumPrice[1] = block[5].part.data;  //Second half of min price.            Page-12
         }
         clearBlock();
         Serial1.write(0x100);
-        cashless.state = cashless.stateDisabled;  //Device is now in the Disabled state, awaiting DEVICE-ENABLE.
+        cashless1.state = cashless.state.disabled;  //Device is now in the Disabled state, awaiting DEVICE-ENABLE.
         return;
     }
-}
+  }
+  else if (n == '2') {
+    cashless2.isActive = 0x0;
+    if (block[1].part.data == cashless.setup.configData.command) {
+    cashless2.vmcFeatureLevel = block[2].part.data;  //Retrieve VMC's supported MDB Level.  Page-10
+    cashless2.columnsOnDisplay = block[3].part.data;  //Retrieve display dimensions.   Page-10
+    cashless2.rowsOnDisplay = block[4].part.data;  //Retrieve display dimensions.      Page-10
+    cashless2.displayType = block[5].part.data;  //0=Seven Segment, 1=ASCII.       Page-10
+    clearBlock();
+    block[0].part.data = cashless.setup.configData.response.readerConfigData;   //Lets the VMC know you are replying to CONFIG-DATA.
+    block[1].part.data = cashless2.readerFeatureLevel;  //Tells VMC device supports Level 3.    Page-10
+    block[2].part.data = cashless2.countryCurrencyCode[0];  //First half of US country code.        Page-11
+    block[3].part.data = cashless2.countryCurrencyCode[1];  //Second half of US country code.       Page-11
+    if ((cashless.vmcFeatureLevel == 0x03) && (cashless.readerFeatureLevel == 0x03)) {  //IF VMC supports Level 3 MDB.       Page-11
+        block[2].part.data = cashless2.countryCurrencyCodeLevel3[0];  //THEN use ISO4217 country code.    Page-11
+        block[3].part.data = cashless2.countryCurrencyCodeLevel3[1];  //Second half of ISO4217 code.      Page-11
+    }
+    block[4].part.data = cashless2.scaleFactor;  //Sets the scale factor for the currency.     Page-11
+    block[5].part.data = cashless2.decimalPlaces;  //Sets decimal places up for cents.     Page-11
+    block[6].part.data = cashless2.applicationMaximumResponseTime;  //Sets maximum response time.      Page-12
+    block[7].part.data = cashless2.miscellaneousOptions;  //Sets refunds, multivend, display, and sales reporting.  Page-12
+    pointer = 8;
+    tX();  //Transmit Setup response block.
+    cashless2.isActive = 0;
+    return;
+    }
+    if (block[1].part.data == cashless.setup.maxMinPrices.command) {
+        if ((cashless2.state == cashless.state.disabled) && (cashless2.vmcFeatureLevel == 0x03)) {
+        cashless2.maximumPrice[0] = block[2].part.data;  //Scaled maximum price.                Page-12
+        cashless2.maximumPrice[1] = block[3].part.data;  //Second half of max price.            Page-12
+        cashless2.maximumPrice[2] = block[4].part.data;  //Scaled minimum price.                Page-12
+        cashless2.maximumPrice[3] = block[5].part.data;  //Second half of min price.            Page-12
+        cashless2.minimumPrice[0] = block[6].part.data;  //Scaled maximum price.                Page-12
+        cashless2.minimumPrice[1] = block[7].part.data;  //Second half of max price.            Page-12
+        cashless2.minimumPrice[2] = block[8].part.data;  //Scaled minimum price.                Page-12
+        cashless2.minimumPrice[3] = block[9].part.data;  //Second half of min price.            Page-12
+        cashless2.countryCurrencyCode[0] = block[10].part.data;
+        cashless2.countryCurrencyCode[1] = block[11].part.data;
+        }
+        else {
+        cashless2.maximumPrice[0] = block[2].part.data;  //Scaled maximum price.                Page-12
+        cashless2.maximumPrice[1] = block[3].part.data;  //Second half of max price.            Page-12
+        cashless2.minimumPrice[0] = block[4].part.data;  //Scaled minimum price.                Page-12
+        cashless2.minimumPrice[1] = block[5].part.data;  //Second half of min price.            Page-12
+        }
+        clearBlock();
+        Serial1.write(0x100);
+        cashless2.state = cashless.state.disabled;  //Device is now in the Disabled state, awaiting DEVICE-ENABLE.
+        return;
+    }
+  }
+}                                           //Pages 10-13
 
-void vEND() {
+void VEND(int n) {
+  if (n == '1') {
+    cashless
     if (block[1].part.data == cashless.vend.vendRequest.command) {
-        cashless.itemPrice[0] = block[2].part.data;
-        cashless.itemPrice[1] = block[3].part.data;
-        cashless.itemNumber[0] = block[4].part.data;
-        cashless.itemNumber[1] = block[5].part.data;
+        cashless1.itemPrice[0] = block[2].part.data;
+        cashless1.itemPrice[1] = block[3].part.data;
+        cashless1.itemNumber[0] = block[4].part.data;
+        cashless1.itemNumber[1] = block[5].part.data;
         clearBlock();
         block[0].part.data = ack;
         pointer = 0;
         tX();
-        stringData = "Request, Price:";
-        stringData += cashless.itemPrice[0];
-        stringData += cashless.itemPrice[1];
-        stringData += ", Item Number:";
-        stringData += cashless.itemNumber[0];
-        stringData += cashless.itemNumber[1];
-        Particle.publish("Vend", stringData, PRIVATE);
-        //if (cashless.)
-          //  cashless.state = cashless.stateVend;
     }
     if (block[1].part.data == cashless.vend.vendCancel.command) {
         block[0].whole = cashless.vend.vendCancel.response.vendDenied;
@@ -1087,16 +1321,12 @@ void vEND() {
         tX();
     }
     if (block[1].part.data == cashless.vend.vendSuccess.command) {
-        cashless.itemNumber[0] = block[2].part.data;
-        cashless.itemNumber[1] = block[3].part.data;
+        cashless1.itemNumber[0] = block[2].part.data;
+        cashless1.itemNumber[1] = block[3].part.data;
         clearBlock();
         block[0].part.data = ack;
         pointer = 0;
         tX();
-        stringData = "Success, item Number:";
-        stringData += cashless.itemNumber[0];
-        stringData += cashless.itemNumber[1];
-        Particle.publish("Vend", stringData, PRIVATE);
     }
     if (block[1].part.data == cashless.vend.vendFailure.command) {
         return;
@@ -1106,8 +1336,7 @@ void vEND() {
         block[0].part.data = cashless.vend.sessionComplete.response.endSession;
         pointer = 1;
         tX();
-        cashless.state = cashless.stateEnabled;
-        Particle.publish("Vend", "Complete", PRIVATE);
+        cashless1.state = cashless.state.enabled;
     }
     if (block[1].part.data == cashless.vend.cashSale.command) {
         cashless.itemPrice[0] = block[2].part.data;
@@ -1118,109 +1347,157 @@ void vEND() {
         block[0].part.data = ack;
         pointer = 0;
         tX();
-        stringData = "Cash Sale, $";
-        stringData += ((cashless.itemPrice[0] * cashless.scaleFactor) << (cashless.decimalPlaces + 0x01)) ;
     }
-}
-
-void rEADER() {
-    if (block[1].part.data == cashless.reader.readerEnable.command) {
-        cashless.state = cashless.stateEnabled;
+  }
+  else if (n == '2') {
+    if (block[1].part.data == cashless.vend.vendRequest.command) {
+        cashless2.itemPrice[0] = block[2].part.data;
+        cashless2.itemPrice[1] = block[3].part.data;
+        cashless2.itemNumber[0] = block[4].part.data;
+        cashless2.itemNumber[1] = block[5].part.data;
         clearBlock();
         block[0].part.data = ack;
         pointer = 0;
         tX();
-            stringData = "Enabled: Level=";
-			stringData += cashless.vmcFeatureLevel;
-			stringData += ", Display(";
-			stringData += cashless.rowsOnDisplay;
-			stringData += ",";
-			stringData += cashless.columnsOnDisplay;
-			stringData += ")";
-			if (cashless.displayType == 0x01)
-			    stringData += "FULL-ASCII";
-			else if (cashless.displayType == 0x00)
-			    stringData += "BASIC-ASCII";
-			stringData += ", Max/Min-Prices:";
-			stringData += cashless.maximumPrice[0];
-			stringData += cashless.maximumPrice[1];
-			stringData += cashless.maximumPrice[3];
-			stringData += "/";
-			stringData += cashless.minimumPrice[0];
-			stringData += cashless.minimumPrice[1];
-			stringData += ".";
-			stringData += cashless.minimumPrice[2];
-        Particle.publish("State", stringData, PRIVATE);
     }
-    if (block[1].part.data == cashless.reader.readerDisable.command) {
+    if (block[1].part.data == cashless.vend.vendCancel.command) {
+        block[0].whole = cashless.vend.vendCancel.response.vendDenied;
+        pointer = 1;
+        tX();
+    }
+    if (block[1].part.data == cashless.vend.vendSuccess.command) {
+        cashless2.itemNumber[0] = block[2].part.data;
+        cashless2.itemNumber[1] = block[3].part.data;
+        clearBlock();
+        block[0].part.data = ack;
+        pointer = 0;
+        tX();
+    }
+    if (block[1].part.data == cashless.vend.vendFailure.command) {
         return;
     }
+    if (block[1].part.data == cashless.vend.sessionComplete.command) {
+        clearBlock();
+        block[0].part.data = cashless.vend.sessionComplete.response.endSession;
+        pointer = 1;
+        tX();
+        cashless2.state = cashless.state.enabled;
+    }
+    if (block[1].part.data == cashless.vend.cashSale.command) {
+        cashless.itemPrice[0] = block[2].part.data;
+        cashless.itemPrice[1] = block[3].part.data;
+        cashless.itemNumber[0] = block[4].part.data;
+        cashless.itemNumber[1] = block[5].part.data;
+        clearBlock();
+        block[0].part.data = ack;
+        pointer = 0;
+        tX();
+    }
+  }
 }
 
-void rEVALUE() {
+void READER(int n) {
+  if (n == '1') {
+    if (block[1].part.data == cashless.reader.readerEnable.command) {
+        cashless1.state = cashless.state.enabled;
+        clearBlock();
+        block[0].part.data = ack;
+        pointer = 0;
+        tX();
+    }
+    if (block[1].part.data == cashless.reader.readerDisable.command) {
+        cashless1.state = cashless.state.disabled;
+        clearBlock();
+        block[0].part.data = ack;
+        pointer = 0;
+    }
+  }
+  else if (n == '2') {
+    if (block[1].part.data == cashless.reader.readerEnable.command) {
+        cashless2.state = cashless.state.enabled;
+        clearBlock();
+        block[0].part.data = ack;
+        pointer = 0;
+        tX();
+  }
+    if (block[1].part.data == cashless.reader.readerDisable.command) {
+      cashless2.state = cashless.state.disabled;
+      clearBlock();
+      block[0].part.data = ack;
+      pointer = 0;
+  }
+}
+}
+
+void REVALUE(int n) {
 
 }
 
-void eXPANSION() {
+void NEGATIVEVEND(int n) {
+
+}
+
+void EXPANSION(int n) {
+  if (n == '1') {
     if (block[1].part.data == cashless.expansion.requestID.command) {
-        cashless.vmcManufacturerCode[0] = block[2].part.data;
-        cashless.vmcManufacturerCode[1] = block[3].part.data;
-        cashless.vmcManufacturerCode[2] = block[4].part.data;
-        cashless.vmcSerialNumber[0] = block[5].part.data;
-        cashless.vmcSerialNumber[1] = block[6].part.data;
-        cashless.vmcSerialNumber[2] = block[7].part.data;
-        cashless.vmcSerialNumber[3] = block[8].part.data;
-        cashless.vmcSerialNumber[4] = block[9].part.data;
-        cashless.vmcSerialNumber[5] = block[10].part.data;
-        cashless.vmcSerialNumber[6] = block[11].part.data;
-        cashless.vmcSerialNumber[7] = block[12].part.data;
-        cashless.vmcSerialNumber[8] = block[13].part.data;
-        cashless.vmcSerialNumber[9] = block[14].part.data;
-        cashless.vmcSerialNumber[10] = block[15].part.data;
-        cashless.vmcSerialNumber[11] = block[16].part.data;
-        cashless.vmcModelNumber[0] = block[17].part.data;
-        cashless.vmcModelNumber[1] = block[18].part.data;
-        cashless.vmcModelNumber[2] = block[19].part.data;
-        cashless.vmcModelNumber[3] = block[20].part.data;
-        cashless.vmcModelNumber[4] = block[21].part.data;
-        cashless.vmcModelNumber[5] = block[22].part.data;
-        cashless.vmcModelNumber[6] = block[23].part.data;
-        cashless.vmcModelNumber[7] = block[24].part.data;
-        cashless.vmcModelNumber[8] = block[25].part.data;
-        cashless.vmcModelNumber[9] = block[26].part.data;
-        cashless.vmcModelNumber[10] = block[27].part.data;
-        cashless.vmcModelNumber[11] = block[28].part.data;
-        cashless.vmcSoftwareVersion[0] = block[29].part.data;
-        cashless.vmcSoftwareVersion[1] = block[30].part.data;
-        block[2].part.data = cashless.readerManufacturerCode[0];
-        block[3].part.data = cashless.readerManufacturerCode[1];
-        block[4].part.data = cashless.readerManufacturerCode[2];
-        block[5].part.data = cashless.readerSerialNumber[0];
-        block[6].part.data = cashless.readerSerialNumber[1];
-        block[7].part.data = cashless.readerSerialNumber[2];
-        block[8].part.data = cashless.readerSerialNumber[3];
-        block[9].part.data = cashless.readerSerialNumber[4];
-        block[10].part.data = cashless.readerSerialNumber[5];
-        block[11].part.data = cashless.readerSerialNumber[6];
-        block[12].part.data = cashless.readerSerialNumber[7];
-        block[13].part.data = cashless.readerSerialNumber[8];
-        block[14].part.data = cashless.readerSerialNumber[9];
-        block[15].part.data = cashless.readerSerialNumber[10];
-        block[16].part.data = cashless.readerSerialNumber[11];
-        block[17].part.data = cashless.readerModelNumber[0];
-        block[18].part.data = cashless.readerModelNumber[1];
-        block[19].part.data = cashless.readerModelNumber[2];
-        block[20].part.data = cashless.readerModelNumber[3];
-        block[21].part.data = cashless.readerModelNumber[4];
-        block[22].part.data = cashless.readerModelNumber[5];
-        block[23].part.data = cashless.readerModelNumber[6];
-        block[24].part.data = cashless.readerModelNumber[7];
-        block[25].part.data = cashless.readerModelNumber[8];
-        block[26].part.data = cashless.readerModelNumber[9];
-        block[27].part.data = cashless.readerModelNumber[10];
-        block[28].part.data = cashless.readerModelNumber[11];
-        block[29].part.data = cashless.readerSoftwareVersion[0];
-        block[30].part.data = cashless.readerSoftwareVersion[1];
+        cashless1.vmcManufacturerCode[0] = block[2].part.data;
+        cashless1.vmcManufacturerCode[1] = block[3].part.data;
+        cashless1.vmcManufacturerCode[2] = block[4].part.data;
+        cashless1.vmcSerialNumber[0] = block[5].part.data;
+        cashless1.vmcSerialNumber[1] = block[6].part.data;
+        cashless1.vmcSerialNumber[2] = block[7].part.data;
+        cashless1.vmcSerialNumber[3] = block[8].part.data;
+        cashless1.vmcSerialNumber[4] = block[9].part.data;
+        cashless1.vmcSerialNumber[5] = block[10].part.data;
+        cashless1.vmcSerialNumber[6] = block[11].part.data;
+        cashless1.vmcSerialNumber[7] = block[12].part.data;
+        cashless1.vmcSerialNumber[8] = block[13].part.data;
+        cashless1.vmcSerialNumber[9] = block[14].part.data;
+        cashless1.vmcSerialNumber[10] = block[15].part.data;
+        cashless1.vmcSerialNumber[11] = block[16].part.data;
+        cashless1.vmcModelNumber[0] = block[17].part.data;
+        cashless1.vmcModelNumber[1] = block[18].part.data;
+        cashless1.vmcModelNumber[2] = block[19].part.data;
+        cashless1.vmcModelNumber[3] = block[20].part.data;
+        cashless1.vmcModelNumber[4] = block[21].part.data;
+        cashless1.vmcModelNumber[5] = block[22].part.data;
+        cashless1.vmcModelNumber[6] = block[23].part.data;
+        cashless1.vmcModelNumber[7] = block[24].part.data;
+        cashless1.vmcModelNumber[8] = block[25].part.data;
+        cashless1.vmcModelNumber[9] = block[26].part.data;
+        cashless1.vmcModelNumber[10] = block[27].part.data;
+        cashless1.vmcModelNumber[11] = block[28].part.data;
+        cashless1.vmcSoftwareVersion[0] = block[29].part.data;
+        cashless1.vmcSoftwareVersion[1] = block[30].part.data;
+        block[2].part.data = cashless1.readerManufacturerCode[0];
+        block[3].part.data = cashless1.readerManufacturerCode[1];
+        block[4].part.data = cashless1.readerManufacturerCode[2];
+        block[5].part.data = cashless1.readerSerialNumber[0];
+        block[6].part.data = cashless1.readerSerialNumber[1];
+        block[7].part.data = cashless1.readerSerialNumber[2];
+        block[8].part.data = cashless1.readerSerialNumber[3];
+        block[9].part.data = cashless1.readerSerialNumber[4];
+        block[10].part.data = cashless1.readerSerialNumber[5];
+        block[11].part.data = cashless1.readerSerialNumber[6];
+        block[12].part.data = cashless1.readerSerialNumber[7];
+        block[13].part.data = cashless1.readerSerialNumber[8];
+        block[14].part.data = cashless1.readerSerialNumber[9];
+        block[15].part.data = cashless1.readerSerialNumber[10];
+        block[16].part.data = cashless1.readerSerialNumber[11];
+        block[17].part.data = cashless1.readerModelNumber[0];
+        block[18].part.data = cashless1.readerModelNumber[1];
+        block[19].part.data = cashless1.readerModelNumber[2];
+        block[20].part.data = cashless1.readerModelNumber[3];
+        block[21].part.data = cashless1.readerModelNumber[4];
+        block[22].part.data = cashless1.readerModelNumber[5];
+        block[23].part.data = cashless1.readerModelNumber[6];
+        block[24].part.data = cashless1.readerModelNumber[7];
+        block[25].part.data = cashless1.readerModelNumber[8];
+        block[26].part.data = cashless1.readerModelNumber[9];
+        block[27].part.data = cashless1.readerModelNumber[10];
+        block[28].part.data = cashless1.readerModelNumber[11];
+        block[29].part.data = cashless1.readerSoftwareVersion[0];
+        block[30].part.data = cashless1.readerSoftwareVersion[1];
         pointer = 31;
         if (cashless.vmcFeatureLevel == 0x03) {
             block[34].part.data = cashless.optionalFeatureBits[0];
@@ -1236,7 +1513,6 @@ void eXPANSION() {
         block[0].part.data = cashless.expansion.readUserFile.response.userFileData;  //Currently unsupported and not forseen to be needed.
         pointer = 1;
         tX();
-
     }
     if (block[1].part.data == cashless.expansion.writeUserFile.command) {
         clearBlock();                       //Obsolete command, not seen as necessary to add.
@@ -1244,16 +1520,16 @@ void eXPANSION() {
         tX();
     }
     if (block[1].part.data == cashless.expansion.writeTimeDate.command) {
-        cashless.timeDateYears = block[2].part.data;
-        cashless.timeDateMonths = block[3].part.data;
-        cashless.timeDateDays = block[4].part.data;
-        cashless.timeDateHours = block[5].part.data;
-        cashless.timeDateMinutes = block[6].part.data;
-        cashless.timeDateSeconds = block[7].part.data;
-        cashless.timeDateDayOfWeek = block[8].part.data;
-        cashless.timeDateWeekNumber = block[9].part.data;
-        cashless.timeDateSummertime = block[10].part.data;
-        cashless.timeDateHoliday = block[11].part.data;
+        cashless1.timeDateYears = block[2].part.data;
+        cashless1.timeDateMonths = block[3].part.data;
+        cashless1.timeDateDays = block[4].part.data;
+        cashless1.timeDateHours = block[5].part.data;
+        cashless1.timeDateMinutes = block[6].part.data;
+        cashless1.timeDateSeconds = block[7].part.data;
+        cashless1.timeDateDayOfWeek = block[8].part.data;
+        cashless1.timeDateWeekNumber = block[9].part.data;
+        cashless1.timeDateSummertime = block[10].part.data;
+        cashless1.timeDateHoliday = block[11].part.data;
         clearBlock();
         block[0].part.data = ack;
         pointer = 0;
@@ -1264,6 +1540,110 @@ void eXPANSION() {
         pointer = 0;
         tX();
     }
+  }
+  else if (n == '2') {
+    if (block[1].part.data == cashless.expansion.requestID.command) {
+        cashless2.vmcManufacturerCode[0] = block[2].part.data;
+        cashless2.vmcManufacturerCode[1] = block[3].part.data;
+        cashless2.vmcManufacturerCode[2] = block[4].part.data;
+        cashless2.vmcSerialNumber[0] = block[5].part.data;
+        cashless2.vmcSerialNumber[1] = block[6].part.data;
+        cashless2.vmcSerialNumber[2] = block[7].part.data;
+        cashless2.vmcSerialNumber[3] = block[8].part.data;
+        cashless2.vmcSerialNumber[4] = block[9].part.data;
+        cashless2.vmcSerialNumber[5] = block[10].part.data;
+        cashless2.vmcSerialNumber[6] = block[11].part.data;
+        cashless2.vmcSerialNumber[7] = block[12].part.data;
+        cashless2.vmcSerialNumber[8] = block[13].part.data;
+        cashless2.vmcSerialNumber[9] = block[14].part.data;
+        cashless2.vmcSerialNumber[10] = block[15].part.data;
+        cashless2.vmcSerialNumber[11] = block[16].part.data;
+        cashless2.vmcModelNumber[0] = block[17].part.data;
+        cashless2.vmcModelNumber[1] = block[18].part.data;
+        cashless2.vmcModelNumber[2] = block[19].part.data;
+        cashless2.vmcModelNumber[3] = block[20].part.data;
+        cashless2.vmcModelNumber[4] = block[21].part.data;
+        cashless2.vmcModelNumber[5] = block[22].part.data;
+        cashless2.vmcModelNumber[6] = block[23].part.data;
+        cashless2.vmcModelNumber[7] = block[24].part.data;
+        cashless2.vmcModelNumber[8] = block[25].part.data;
+        cashless2.vmcModelNumber[9] = block[26].part.data;
+        cashless2.vmcModelNumber[10] = block[27].part.data;
+        cashless2.vmcModelNumber[11] = block[28].part.data;
+        cashless2.vmcSoftwareVersion[0] = block[29].part.data;
+        cashless2.vmcSoftwareVersion[1] = block[30].part.data;
+        block[2].part.data = cashless2.readerManufacturerCode[0];
+        block[3].part.data = cashless2.readerManufacturerCode[1];
+        block[4].part.data = cashless2.readerManufacturerCode[2];
+        block[5].part.data = cashless2.readerSerialNumber[0];
+        block[6].part.data = cashless2.readerSerialNumber[1];
+        block[7].part.data = cashless2.readerSerialNumber[2];
+        block[8].part.data = cashless2.readerSerialNumber[3];
+        block[9].part.data = cashless2.readerSerialNumber[4];
+        block[10].part.data = cashless2.readerSerialNumber[5];
+        block[11].part.data = cashless2.readerSerialNumber[6];
+        block[12].part.data = cashless2.readerSerialNumber[7];
+        block[13].part.data = cashless2.readerSerialNumber[8];
+        block[14].part.data = cashless2.readerSerialNumber[9];
+        block[15].part.data = cashless2.readerSerialNumber[10];
+        block[16].part.data = cashless2.readerSerialNumber[11];
+        block[17].part.data = cashless2.readerModelNumber[0];
+        block[18].part.data = cashless2.readerModelNumber[1];
+        block[19].part.data = cashless2.readerModelNumber[2];
+        block[20].part.data = cashless2.readerModelNumber[3];
+        block[21].part.data = cashless2.readerModelNumber[4];
+        block[22].part.data = cashless2.readerModelNumber[5];
+        block[23].part.data = cashless2.readerModelNumber[6];
+        block[24].part.data = cashless2.readerModelNumber[7];
+        block[25].part.data = cashless2.readerModelNumber[8];
+        block[26].part.data = cashless2.readerModelNumber[9];
+        block[27].part.data = cashless2.readerModelNumber[10];
+        block[28].part.data = cashless2.readerModelNumber[11];
+        block[29].part.data = cashless2.readerSoftwareVersion[0];
+        block[30].part.data = cashless2.readerSoftwareVersion[1];
+        pointer = 31;
+        if (cashless.vmcFeatureLevel == 0x03) {
+            block[34].part.data = cashless.optionalFeatureBits[0];
+            block[34].part.data = cashless.optionalFeatureBits[1];
+            block[34].part.data = cashless.optionalFeatureBits[2];
+            block[34].part.data = cashless.optionalFeatureBits[3];
+            pointer = 35;
+        }
+        tX();                                   ////I just now remembered loops exist.
+    }
+    if (block[1].part.data == cashless.expansion.readUserFile.command) {
+        clearBlock();
+        block[0].part.data = cashless.expansion.readUserFile.response.userFileData;  //Currently unsupported and not forseen to be needed.
+        pointer = 1;
+        tX();
+    }
+    if (block[1].part.data == cashless.expansion.writeUserFile.command) {
+        clearBlock();                       //Obsolete command, not seen as necessary to add.
+        block[0].part.data = ack;
+        tX();
+    }
+    if (block[1].part.data == cashless.expansion.writeTimeDate.command) {
+        cashless2.timeDateYears = block[2].part.data;
+        cashless2.timeDateMonths = block[3].part.data;
+        cashless2.timeDateDays = block[4].part.data;
+        cashless2.timeDateHours = block[5].part.data;
+        cashless2.timeDateMinutes = block[6].part.data;
+        cashless2.timeDateSeconds = block[7].part.data;
+        cashless2.timeDateDayOfWeek = block[8].part.data;
+        cashless2.timeDateWeekNumber = block[9].part.data;
+        cashless2.timeDateSummertime = block[10].part.data;
+        cashless2.timeDateHoliday = block[11].part.data;
+        clearBlock();
+        block[0].part.data = ack;
+        pointer = 0;
+    }
+    if (block[1].part.data == cashless.expansion.optionalFeatureEnabled.command) {
+        cashless.optionalFeatureBitsEnabled.whole = block[5].part.data;
+        block[0].part.data = ack;
+        pointer = 0;
+        tX();
+    }
+  }
 }
 
 

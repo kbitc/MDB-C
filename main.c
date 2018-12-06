@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <linux/module.h>
+#include <linux/kernel.h>
 #include "Communication_Format.cpp"
 #include "Cashless.cpp"
 
@@ -17,3 +20,13 @@ void setup() {
 //    rESET();
 //    return 1;
 //}
+
+int main(int argc, int *argv[]) {
+
+}
+int init_module (void) {
+
+}
+void cleanup_module (void) {
+
+}
