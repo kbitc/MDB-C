@@ -1,8 +1,6 @@
 # MDB-C
 The end goal of this project is to create an easy to use and abstract interface for the MDB/ICP 3.0 communication protocol.
 
-This was, and still is, my first program I ever wrote, so it likely has a few errors to correct.
-
 The code:
 Each MDB file is named after each section in the MDB manual.
 Each variable and function tries to stick as closely to the wording used in the manual.
