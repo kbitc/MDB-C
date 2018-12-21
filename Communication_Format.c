@@ -9,6 +9,7 @@ int rX() {                                          //1=ACK, 2=NAK, 3=RET, 4=NO-
             return 4;                               //Return status that time is up if so.
     }
     block[counter].whole = Serial1.read();          //Get first byte.
+    command = block[0].part.data;
 	if (block[0].part.data == ack)              	//If Acknowledged...
 		return 1;                  		   			//Return with one, meaning Acknowledge response recieved.
 	if (block[0].part.data == ret)              	//If VMC requests a retransmit...
@@ -41,10 +42,11 @@ void clearBlock() {                            //Clears data out of the block.
         counter++;
     }
     counter = 0;
+    command = 0x0;
     checksum = 0x00;
 }
 
-int tX() {
+int tX(unsigned int pointer) {
     counter = 0;
     checksum = 0x00;
     while (pointer != counter) {

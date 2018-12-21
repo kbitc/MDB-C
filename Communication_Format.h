@@ -1,4 +1,4 @@
-int counter, result, pointer;
+unsigned int counter, result, pointer;
 unsigned char checksum, ack, ret, nak;
 unsigned short txBypass; //Fixes tx() using nineBit datatype's read-only as a write method.
  //counter = A tracker for loops to define an endpoint with.
@@ -18,3 +18,4 @@ union nineBit {             		  //Union allows writing mode and data bits simult
     } part;                 		  //Named for readability & organization of code.
     unsigned short whole;         //Allows writing the 'data' and 'mode' all at once, otherwise the second write would erase the first.
 } block[35];                		  //Array of 9 bit data, 36 is the maximum amount of 'bytes' MDB allows per transmission.
+unsigned char command : 3;        //Would be part of the 'block' union but must be a separate variable.

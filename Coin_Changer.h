@@ -1,3 +1,5 @@
+//5.1
+
 #include "Communication_Format.cpp"
 
 struct {
@@ -13,22 +15,29 @@ struct {
 //Command Identification & Bitmasks
   struct {
 		unsigned char command = 0x08;
-	} reset;                                  //Page
+	} reset;                                  //5.3
 	struct {
 		unsigned char command = 0x09;
-	} setup;                             //Page 12-14
+	} setup;                             //5.4
 	struct {
 		unsigned char command = 0x0b;
-	} poll;                              //Page 15-18
+    struct {
+      unsigned char coinsDispensedManually = 0x80;
+      unsigned char coinsDeposited = 0x40;
+      unsigned char status = 0x00;  //For VMC use.
+      unsigned char slug = 0x20;    //For VMC use.
+      unsigned char ftlPolledResponse FFFFFFFTTTTTTLLLLLLL STUFFFFFFF;
+    } response;       //Bitmasks
+	} poll;                              //5.6
 	struct {
     unsigned char command = 0x0a;
-  } tubeStatus;                        //Page 14-15
+  } tubeStatus;                        //5.5
   struct {
     unsigned char command = 0x0c;
-  } coinType;                          //Page 17-18
+  } coinType;                          //5.9
   struct {
     unsigned int command = 0x0d;
-  } dispense;                          //Page 19
+  } dispense;                          //5.10
 	struct {
 		unsigned char command = 0x0f;
 		struct {
@@ -86,71 +95,62 @@ struct {
 				} response;
 			} reqToSend;
 		} ftl;
-	} expansion;                         //Page 93-100
+	} expansion;                         //5.11
+  struct {
+    unsigned char escrowRequest : 1 = 0x01;
+    unsigned char changerPayoutBusy : 2 = 0x02;
+    unsigned char noCredit : 2 = 0x03;
+    unsigned char defectiveTubeSensor : 3 = 0x04;
+    unsigned char doubleArrival : 3 = 0x05;
+    unsigned char acceptorUnplugged : 3 = 0x06;
+    unsigned char tubeJam : 3 = 0x07;
+    unsigned char romChecksumError : 4 = 0x08;
+    unsigned char coinRoutingError : 4 = 0x09;
+    unsigned char changerBusy : 4 = 0x0a;
+    unsigned char changerWasReset : 4 = 0x0b;
+    unsigned char coinJam : 4 = 0x0c;
+    unsigned char possibleCreditedCoinRemoval : 4 = 0x0d;
+  } status;
 } changer;                            //Constants
 
 
 struct CoinHopper{
-  String deviceID, readerID, sessionID, sessionID2, money, command;
-  unsigned char address = 0x08;                    //Page 9.
+  String ;
+  unsigned char address = 0x08;                    //5.1
   //SETUP VARIABLES
-    //Setup.configurationData Page 58-59
+    //Setup 5.4
     unsigned char vmcFeatureLevel : 2;
-    unsigned char columnsOnDisplay;
-    unsigned char rowsOnDisplay;
-    unsigned char displayType : 3;					  //PWording selected to avoid confusion.
-      //Setup.configurationData.Response Page 59-60
-      unsigned char readerFeatureLevel : 2;
-      unsigned char countryCurrencyCode[1];			//Page 61.
-    	unsigned char countryCurrencyCodeLevel3[1];
-    	unsigned char scaleFactor;
-    	unsigned char decimalPlaces;
-    	unsigned char applicationMaximumResponseTime;   //Maximum response time in seconds needed to respond to VMC. Page 12.
-    	unsigned char miscellaneousOptions : 4;      	//Page 12.
-    //Setup.maxMinPrices Page 61
-    unsigned char maximumPrice[3];
-    unsigned char minimumPrice[3];
-    unsigned char vmcCurrencyCode[1];         //Page 61
-  //POLL VARIABLES
-    //Poll.readerConfigInfo is made up from vallues previously mentioned.
-    //Poll.displayRequest Page 63
-    unsigned char displayTime;
-  	char displayData[29];
-    //Poll.beginSession Page64-67
-    unsigned char fundsAvailable[3];
-  	unsigned char paymentMediaID[3];
-  	unsigned char paymentType;
-  	unsigned char paymentData[1];
-    unsigned char userLanguage[1];
-  	unsigned char userCurrencyCode[1];
-  	unsigned char cardOptions;
-    //Poll.sessionCancelRequest Page 67
-    //Poll.vendApproved or denied, or endSession or cancelled. Page 67-68
-    //Poll.peripheralID Page 68-69
-    unsigned char readerManufacturerCode[2];
-  	unsigned char readerSerialNumber[11];
-  	unsigned char vmcSerialNumber[11];
-  	unsigned char readerModelNumber[11];
-    //Poll.malfunctionError Page 70-71
-    struct {
-      unsigned char paymentMedia1 : 4 =0x0f;
-      unsigned char invalidPaymentMedia1 : 4 =0x1f;
-      unsigned char tamper : 4 =0x2f;
-      unsigned char manufacturerDefined2 : 4 =0x3f;
-      unsigned char communications2 : 4 =0x4f;
-      unsigned char readerRequiresService2 : 4 =0x5f;
-      unsigned char unassigned2 : 4 =0x6f;
-      unsigned char manufacturerDefined2 : 4 =0x7f;
-      unsigned char readerFailure3 : 4 =0x8f;
-      unsigned char communications3 : 4 =0x9f;
-      unsigned char paymentMediaJammed3 : 4 =0xaf;
-      unsigned char manufacturerDefined3 : 4 =0xbf;
-      unsigned char refundInternalReaderCreditLost : 4 =0xcf;
-    }error;
-    //Poll.commandOutOfSequence Page 71
-    unsigned char status : 3;
+    unsigned char changerFeatureLevel : 2;
+    unsigned char countryCurrencyCode[1];			//Page 61.
+    unsigned char scaleFactor;
+    unsigned char decimalPlaces;
+    unsigned char coinTypeRouting[1];
+    unsigned char coinTypeCredit[15];
+    //5.5
+    unsigned char tubeFullStatus[1];
+    unsigned char tubeStatus[15];
+    //5.6
+    unsigned char coinsDispensedManually : 1;
+    unsigned char coinsDispensedManuallyData[15];
+    unsigned char coinsDeposited : 1;
+    unsigned char coinsDepositedData[15];
+    unsigned char status : 1;
+    unsigned char slug : 1;
+    unsigned char slugs;
+    unsigned char escrowRequest : 1;
+    unsigned char changerPayoutBusy : 1;
+    unsigned char noCredit : 1;
+    unsigned char defectiveTubeSensor : 1;
+    unsigned char doubleArrival : 1;
+    unsigned char acceptorUnplugged : 1;
+    unsigned char tubeJam : 1;
+    unsigned char romChecksumError : 1;
+    unsigned char coinRoutingError : 1;
+    unsigned char changerBusy : 1;
+    unsigned char changerWasReset : 1;
+    unsigned char coinJam : 1;
+    unsigned char possibleCreditedCoinRemoval :1;
     //Poll.revalueDenied or Approved or limitAmount.  Page 71-73
-    unsigned char revalueLimitAmount[3];
     //Poll.userFileData Page 73 OBSOLETE
     unsigned char numberOfUserFile;
     unsigned char lengthOfUserFile;
@@ -239,4 +239,138 @@ struct CoinHopper{
   	unsigned char isOnline : 1;       //Flag set when device is online, reset when device is offline, meaning ignore all MDB activity.
   	unsigned char isResetting : 1;    //Flag set when device recieves a reset command, and un-set when peripheral's reset completes.
   	unsigned char isReset : 1;        //Flag set when device has been reset, but hasn't transmitted the 'JUST RESET' response yet.
-};                                    //Variables
+} changer1;                                    //Variables
+
+
+static int resetPeripheral() {
+  changer1.commandOutOfSequence = 0x0;          //Self explanatory flag.
+
+}
+
+static int reset() {
+
+}
+
+static int setup() {
+  clearBlock();
+  block[0].part.data = changer1.changerFeatureLevel;
+  block[1].part.data = changer1.countryCurrencyCode[0];
+  block[2].part.data = changer1.countryCurrencyCode[1];
+  block[3].part.data = changer1.scaleFactor;
+  block[4].part.data = changer1.decimalPlaces;
+  block[5].part.data = changer1.coinTypeRouting[0];
+  block[6].part.data = changer1.coinTypeRouting[1];
+  block[7].part.data = changer1.coinTypeCredit[0];
+  block[8].part.data = changer1.coinTypeCredit[1];
+  block[9].part.data = changer1.coinTypeCredit[2];
+  block[10].part.data = changer1.coinTypeCredit[3];
+  block[11].part.data = changer1.coinTypeCredit[4];
+  block[12].part.data = changer1.coinTypeCredit[5];
+  block[13].part.data = changer1.coinTypeCredit[6];
+  block[14].part.data = changer1.coinTypeCredit[7];
+  block[15].part.data = changer1.coinTypeCredit[8];
+  block[16].part.data = changer1.coinTypeCredit[9];
+  block[17].part.data = changer1.coinTypeCredit[10];
+  block[18].part.data = changer1.coinTypeCredit[11];
+  block[19].part.data = changer1.coinTypeCredit[12];
+  block[20].part.data = changer1.coinTypeCredit[13];
+  block[21].part.data = changer1.coinTypeCredit[14];
+  block[22].part.data = changer1.coinTypeCredit[15];
+  pointer = 23;
+  tX();
+}
+
+static int tubeStatus() {
+  clearBlock();
+  block[0].part.data = changer1.tubeFullStatus[0];
+  block[1].part.data = changer1.tubeFullStatus[1];
+  block[2].part.data = changer1.tubeStatus[0];
+  block[3].part.data = changer1.tubeStatus[1];
+  block[4].part.data = changer1.tubeStatus[2];
+  block[5].part.data = changer1.tubeStatus[3];
+  block[6].part.data = changer1.tubeStatus[4];
+  block[7].part.data = changer1.tubeStatus[5];
+  block[8].part.data = changer1.tubeStatus[6];
+  block[9].part.data = changer1.tubeStatus[7];
+  block[10].part.data = changer1.tubeStatus[8];
+  block[11].part.data = changer1.tubeStatus[9];
+  block[12].part.data = changer1.tubeStatus[10];
+  block[13].part.data = changer1.tubeStatus[11];
+  block[14].part.data = changer1.tubeStatus[12];
+  block[15].part.data = changer1.tubeStatus[13];
+  block[16].part.data = changer1.tubeStatus[14];
+  block[17].part.data = changer1.tubeStatus[15];
+  pointer = 18;
+  tX();
+}
+
+static int poll() {
+  if (changer1.coinsDispensedManually == '0x0') {
+    clearBlock();
+    counter = 0;
+    do {
+      block[counter].part.data = changer1.coinsDispensedManuallyData[counter];
+      counter++;
+      block[counter].part.data = changer1.coinsDispensedManuallyData[counter];
+      counter++;
+    } while (block[].part.data = changer1.coinsDepositedData[];)
+    counter++;
+    pointer = counter;
+    tx();
+    return 0;
+  }
+  else if (changer1.coinsDeposited == '0x0') {
+    clearBlock();
+    counter = 0;
+    do {
+      block[counter].part.data = changer1.coinsDepositedData[counter];
+      counter++;
+      block[counter].part.data = changer1.coinsDepositedData[counter];
+      counter++;
+    } while (block[].part.data = changer1.coinsDepositedData[];)
+    counter++;
+    pointer = counter;
+    tx();
+    return 0;
+  }
+  else if (changer1.status == '0x0') {
+    clearBlock();
+    counter = 0;
+    if (changer1.escrowRequest = '0x0') {
+      block[counter].part.data = changer.status.escrowRequest;
+      counter++
+    }
+    if (changer1.changerPayoutBusy = '0x0') {
+      block[counter].part.data = changer.status.changerPayoutBusy;
+    }
+    tX(counter);
+    return 0;
+  }
+  else if (changer1.slug == '0x0') {
+    clearBlock();
+    block[0].part.data = changer1.slugs;
+    pointer = 1;
+    tX();
+    return 0;
+  }
+  else if (changer1.ftlPolledResponse == '0x0') {
+
+  }
+  else
+    block[0].part.data = ack;
+    tX(1);
+}
+
+static int coinType() {
+
+}
+
+static int dispense() {
+block[0].part.data = ack;
+tx(1);
+changer1.status = changer.status.payoutBusy;
+}
+
+static int expansion() {
+
+}
