@@ -2,7 +2,7 @@
 
 //7.2.1
 
-struct {
+extern typedef struct cashlessType {
   union {
     unsigned char inactive = 0x1;
     unsigned char disabled = 0x2;
@@ -359,7 +359,7 @@ char startCashless(int n){
 };        //Input number of cashless device you wish to start.
 
 
-void StateMonitor() {
+void main() {
   if (cashless1.state == cashless.state.inactive) {
         if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))   //Result 6 means incoming command is addressed to a cashless device.
             RESET(1);
@@ -671,7 +671,7 @@ void RESET(int n) {
       cashless2.state = cashless.state.inactive;
     }
     block[0].part.data = ack;           //No response comes from VMC so sending ACK this way is the most efficient.
-    tX(1);
+    tX(0);
     chronoLogic(0);                 //Resettimer for the 200ms or so allowed for resetting.  Chronologic may need to be adjusted to time two devices.
     resetPeripheral(n);
     peripheral1.isActive = 0x1;
@@ -1163,7 +1163,7 @@ void POLL(int n) {
       }              //Sends config data.
       else
           block[0].part.data = ack;
-          tX(1);
+          tX(0);
       clearBlock();
     };
 }
@@ -1281,21 +1281,18 @@ void VEND(int n) {
         cashless1.itemNumber[1] = block[5].part.data;
         clearBlock();
         block[0].part.data = ack;
-        pointer = 0;
-        tX();
+        tX(0);
     }
     if (block[1].part.data == cashless.vend.vendCancel.command) {
         block[0].whole = cashless.vend.vendCancel.response.vendDenied;
-        pointer = 1;
-        tX();
+        tX(1);
     }
     if (block[1].part.data == cashless.vend.vendSuccess.command) {
         cashless1.itemNumber[0] = block[2].part.data;
         cashless1.itemNumber[1] = block[3].part.data;
         clearBlock();
         block[0].part.data = ack;
-        pointer = 0;
-        tX();
+        tX(0);
     }
     if (block[1].part.data == cashless.vend.vendFailure.command) {
         return;
@@ -1314,8 +1311,7 @@ void VEND(int n) {
         cashless.itemNumber[1] = block[5].part.data;
         clearBlock();
         block[0].part.data = ack;
-        pointer = 0;
-        tX();
+        tX(0);
     }
   }
   else if (n == '2') {

@@ -1,5 +1,4 @@
-#include "Communication_Format.h"
-#include "Bus_Timing.cpp"
+static unsigned char
 
 int rX() {                                          //1=ACK, 2=NAK, 3=RET, 4=NO-RESPONSE, 5=Ignored, 6=OK!
     clearBlock();
@@ -55,15 +54,11 @@ int tX(unsigned int pointer) {
     counter++;
     Serial1.flush();                        //Wait for information to finish sending, placed here so previous commands execute prior to any waiting time.
     }
-    //block[counter].part.data +- checksum;   //Add to the checksum, doesn't affect ACK or NAK, but requires a block with no extra data other than what's sent, prior to calling tX().
-    //block[counter].part.mode = 0x01;        //Add a mode bit to the checksum.
-    txBypass = block[counter].part.data + checksum;  //Replacing the above two uncommented parts.
-    txBypass << 8;                            //Replacing the above two uncommented parts.
-    txBypass++;                               //Replacing the above two uncommented parts.
-    Serial1.write(txBypass);
+    block[counter].whole = (block[counter].whole | checksum | 0x100);
+    Serial1.write(block[counter].whole);
     chronoLogic(0);                         //Set non-response timer.
     result = rX();
     if ((result == 1) || (result == 2) || (result == 4))
         clearBlock();
     return result;
-}
+}  //The pointer describes how many data bytes are sent.  If just sending ACK or NAK, there are zero data bytes.  Commands are considered data bytes.
