@@ -1,7 +1,8 @@
 #include "Cashless.h"
 #include "Communication_Format.cpp"
 
-void CashlessDevice() {  //Place in your code on a loop to run the cashless device.
+/*
+void main() {  //Place in your code on a loop to run the cashless device.
     if (cashless.state == cashless.stateInactive) {
         if ((block[0].command == cashless.reset.command) && (block[0].part.mode == 0x01) && (result == 6))   //No byte will reach here with result 6 if not for you.  Check the command.
             rESET();
@@ -35,6 +36,7 @@ void CashlessDevice() {  //Place in your code on a loop to run the cashless devi
     if (cashless.state == cashless.stateRevalue);
     if (cashless.state == cashless.stateNegativeVend);
 }
+*/
 
 void resetPeripheral() {                       //Reset flags and other nonessential values.
 	cashless.displayRequest = 0x0;               //Flag for when you have info to display on the vending screen.
