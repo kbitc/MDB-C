@@ -1,10 +1,12 @@
 # MDB-C
-The end goal of this project is to create an easy to use and abstract interface for the MDB/ICP 3.0 communication protocol.
+The end goal of this project is to create an easy to use and abstract interface for the MDB/ICP 3.0 communication protocol.  It will be configurable for both Arduino based hardware (with the default configuration being for the ESP32, used with the Arduino Core), as well as hardware running linux (eventually). 
 
 A better explanation/guide will be made once finished. Also, a goal once done is to make an interactive Q&A webpage where it will adjust the settings in all of the files you need, in a user friendly way.
 
+To use the software, you find the "main.c" file, and fill in the "setup()" function with all your custom code, including the initialization of the serial ports.  From there, you include the file for whichever peripheral you are emulating, and copy the "main()" function from that peripheral's file, to the "main.c" file's "main()" function.  Later on, there will be a way to link interrupts in the "main.c" file, and more, but for now the code works without it.
 
-The code:
+
+The code is organized this way:
 Each MDB file is named after each section in the MDB manual.
 Each variable and function tries to stick as closely to the wording used in the manual.
  Each variable uses lowercase for the first character, then capitalized first letter of all words thereafter. i.e. 'helloWorld'
