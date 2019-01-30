@@ -1,27 +1,29 @@
-static unsigned char
+//static unsigned char
+#include "Communication_Format.h"
+#include <HardwareSerial.h>
 
-int rX() {                                          //1=ACK, 2=NAK, 3=RET, 4=NO-RESPONSE, 5=Ignored, 6=OK!
+int rX(unsigned char address) {                                          //1=ACK, 2=NAK, 3=RET, 4=NO-RESPONSE, 5=Ignored, 6=OK!
     clearBlock();
     while (!Serial1.available()) {                  //Wait for first byte.
         chronoLogic(1);                             //Update timing flags.
-        if (transmission.isUnresponsive)            //Chec if time is up.
+        if (transmission.isUnresponsive)            //Check if time is up.
             return 4;                               //Return status that time is up if so.
     }
     block[counter].whole = Serial1.read();          //Get first byte.
     command = block[0].part.data;
-	if (block[0].part.data == ack)              	//If Acknowledged...
-		return 1;                  		   			//Return with one, meaning Acknowledge response recieved.
-	if (block[0].part.data == ret)              	//If VMC requests a retransmit...
-		return 3;       	                    	//Return to API in order to reload the block w/ data.
-	if (block[0].part.data == nak)              	//If Negatively Acknowledged...
-		return 2;
-	if (!block[0].part.mode) {
-	    if (!peripheral.isActive)
-	        return 5;                               //Return if it's not an address byte and the device isn't active.
-	}
-	else if ((block[0].part.data & 0xf8) != peripheral.address)
-	       return 5;                                //Return if it's not addressed to you.
-    while (counter != 36)  {                   		//While the counter does not exceed the maximum block size...
+  if (block[0].part.data == ack)                //If Acknowledged...
+    return 1;                             //Return with one, meaning Acknowledge response recieved.
+  if (block[0].part.data == ret)                //If VMC requests a retransmit...
+    return 3;                               //Return to API in order to reload the block w/ data.
+  if (block[0].part.data == nak)                //If Negatively Acknowledged...
+    return 2;
+  if (!block[0].part.mode) {
+      if (!peripheral.isActive)
+          return 5;                               //Return if it's not an address byte and the device isn't active.
+  }
+  else if ((block[0].part.data & 0xf8) != peripheral.address)
+         return 5;                                //Return if it's not addressed to you.
+    while (counter != 36)  {                      //While the counter does not exceed the maximum block size...
         while (!Serial1.available()) {               ////Wait for data to be recieved.
             chronoLogic(1);                         //Update timing flags.
             if (transmission.isDone)                //Check for inter-byte timeout.
@@ -45,7 +47,7 @@ void clearBlock() {                            //Clears data out of the block.
     checksum = 0x00;
 }
 
-int tX(unsigned int pointer) {
+int tX(unsigned int pointer, unsigned char address) {
     counter = 0;
     checksum = 0x00;
     while (pointer != counter) {
@@ -57,7 +59,7 @@ int tX(unsigned int pointer) {
     block[counter].whole = (block[counter].whole | checksum | 0x100);
     Serial1.write(block[counter].whole);
     chronoLogic(0);                         //Set non-response timer.
-    result = rX();
+    result = rX(address);
     if ((result == 1) || (result == 2) || (result == 4))
         clearBlock();
     return result;
