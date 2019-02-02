@@ -1,14 +1,16 @@
 # MDB-C
-The end goal of this project is to create an easy to use and abstract interface for the MDB/ICP 3.0 communication protocol.  It will be configurable for both Arduino based hardware (with the default configuration being for the ESP32, used with the Arduino Core), as well as hardware running linux (eventually). 
+The end goal of this project is to create an easy to use and abstract interface for the MDB/ICP (Version 4.2) communication protocol.  The target hardware is any Arduino compatible device (defaulting on the ESP32), but the end goal is to complete this code and have it run on a linux system.  So, the language used should stick to C if it is not hardware/arduino specific code, to make the transition to linux (C only) easy.
 
-A better explanation/guide will be made once finished. Also, a goal once done is to make an interactive Q&A webpage where it will adjust the settings in all of the files you need, in a user friendly way.
+Currently working devices:
+*Cashless Payment Device
 
-To use the software, you find the "main.c" file, and fill in the "setup()" function with all your custom code, including the initialization of the serial ports.  From there, you include the file for whichever peripheral you are emulating, and copy the "main()" function from that peripheral's file, to the "main.c" file's "main()" function.  Later on, there will be a way to link interrupts in the "main.c" file, and more, but for now the code works without it.
+To use the software, take the source & header files for: "MDB_ESP32", "Bus_Timing", "Communication_Format", and "Cashless".  Also grab the "PreProcessors.h" file.  Slap em all into your Arduino IDE in different tabs named accordingly.  The "MDB_ESP32.c" file will get a .ino extension instead when used with arduino as the main function.  I don't yet have an abstract guide on interacting with the software, so you'll have to take a look at it.  In general, you interact by reading and writing to global status flags.  Flags are set in order to initiate an action or signal a condition to the other "side" (your side, and the MDB device's side).  If data needs to be passed along, data will be stored in the appropriate location prior to setting the flags.
 
 
-The code is organized this way:
-Each MDB file is named after each section in the MDB manual.
-Each variable and function tries to stick as closely to the wording used in the manual.
+The code is essentially a transcription of the manual, and so, it is both organized like the manual, and tokens are named as closely as possible to names used in the manual.
+
+Each section of the MDB manual that is relevant to software, has its own file named after that section.
+ In doing this, it is easy to follow along in the manual with the code.
  Each variable uses lowercase for the first character, then capitalized first letter of all words thereafter. i.e. 'helloWorld'
   Each variable is contained in a hierarchical structure, named (& numbered) after the peripherial/device the data relates to.
   Each constant is contained in a hierarchical structure named after the peripherial/device the data relates to.
