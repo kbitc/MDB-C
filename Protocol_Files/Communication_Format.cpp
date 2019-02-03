@@ -22,11 +22,11 @@
 uint8_t rX(uint8_t address) {                                        //1=ACK, 2=NAK, 3=RET, 4=NO-RESPONSE, 5=Ignored, 6=OK!, 7=Disordered, 8=Distorted
 /*Receive the first Byte*/
   clearBlock();
-  while (!Serial1.available()) {
+  while (!mdb.available()) {
     if (chronoLogic(TIMER_UPDATE) == T_RESPONSE)
     return NO_RESPONSE;
   }
-  block[counter].whole = Serial1.read();
+  block[counter].whole = mdb.read();
 /*Check if it is one of the three response codes*/
   if (block[0].part.data == ACK)
     return ACK;
@@ -50,7 +50,7 @@ uint8_t rX(uint8_t address) {                                        //1=ACK, 2=
   }
 /*Retrieve the rest of the block*/
   while (counter != 36)  {
-    while (!Serial1.available()) {
+    while (!mdb.available()) {
       if (chronoLogic(TIMER_UPDATE) == T_INTER_BYTE) {  /*1mS of silence marks the end of a conversation*/
         if (checksum != block[counter].part.data)
           return DISTORTED;
@@ -69,7 +69,7 @@ uint8_t rX(uint8_t address) {                                        //1=ACK, 2=
     chronoLogic(TIMER_RESET);
     checksum += block[counter].part.data;
     counter++;
-    block[counter].whole = Serial1.read();
+    block[counter].whole = mdb.read();
   }
 }
 
@@ -92,10 +92,10 @@ uint8_t tX(unsigned int pointer, uint8_t address) {
       block[counter].whole = (block[counter].whole | 0x100);  /*VMC always sets the mode bit on the first byte, unless it's ACK, NAK, or RET*/
   }
   while (pointer != counter) {
-    Serial1.write(block[counter].whole);
+    mdb.write(block[counter].whole);
     checksum += block[counter].part.data;
     counter++;
-    Serial1.flush();
+    mdb.flush();
   }
 /*Send the last byte*/
   if (address != VMC_ADDRESS)
@@ -104,7 +104,7 @@ uint8_t tX(unsigned int pointer, uint8_t address) {
     if (counter != 0)                                                  /*ACK, NAK, and RET don't use a check byte if from the VMC*/
       block[counter].whole = (block[counter].whole | checksum);
   }
-  Serial1.write(block[counter].whole);
+  mdb.write(block[counter].whole);
 /*Prepare for a response*/
   chronoLogic(TIMER_RESET);
   return rX(address);
