@@ -5,39 +5,41 @@
 #include "PreProcessors.h"
 #include "Communication_Format.h"
 
-extern void resetCashless(int n);
+extern uint8_t resetCashless();
 
-extern int beginSession(String data);
+extern uint8_t beginSession(String data);
 
-extern int sessionCancelRequest(String data);
+extern uint8_t terminateSession();
 
-extern int vendApproved(String data);
+extern uint8_t sessionCancelRequest(String data);
 
-extern int vendDenied(String data);
+extern uint8_t vendApproved(String data);
 
-extern int displayRequest(String data);
+extern uint8_t vendDenied(String data);
 
-extern int displayCancel(String data);
+extern uint8_t displayRequest(String data);
+
+extern uint8_t displayCancel(String data);
 
 
-extern void rESET(int n);
+extern uint8_t rESET();
 
-extern void pOLL(int n);
+extern uint8_t pOLL();
 
-extern void sETUP(int n);
+extern uint8_t sETUP();
 
-extern void vEND(int n);
+extern uint8_t vEND();
 
-extern void rEADER(int n);
+extern uint8_t rEADER();
 
-extern void rEVALUE(int n);
+extern uint8_t rEVALUE();
 
-extern void nEGATIVEVEND(int n);
+extern uint8_t nEGATIVEVEND();
 
-extern void eXPANSION(int n);
+extern uint8_t eXPANSION();
 /*
 //Cashless1 is meant for card based deives. I.E. a credit card.
-void startCashless(char n) {
+uint8_t startCashless(char n) {
     //For Setup - Config Data.
     cashless.readerFeatureLevel = 0x03;
     cashless.countryCurrencyCode[0] = 0x00;
@@ -109,7 +111,7 @@ void startCashless(char n) {
             cashless.cardOptions = 0x00;
 }
 //Cashless2 is meant for mobile phone based devices.
-void cashless2Settings() {
+uint8_t cashless2Settings() {
     cashless2.address = cashless.card2;
     //For Setup - Config Data.
     cashless2.readerFeatureLevel = 0x03;
