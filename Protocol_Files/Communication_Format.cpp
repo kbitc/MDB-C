@@ -1,7 +1,3 @@
-#ifndef COMMUNICATION_FORMAT
-#define COMMUNICATION_FORMAT
-
-#include "Arduino.h"
 #include "Communication_Format.h"
 
 /*  rX() when called directly after indication that data has been received,
@@ -18,15 +14,15 @@
  */
 
 
-
+extern uint8_t rxBitsAvailable();
 uint8_t rX(uint8_t address) {                                        //1=ACK, 2=NAK, 3=RET, 4=NO-RESPONSE, 5=Ignored, 6=OK!, 7=Disordered, 8=Distorted
 /*Receive the first Byte*/
   clearBlock();
-  while (!mdb.available()) {
+  while (rxBitsAvailable() == 0x00) {
     if (chronoLogic(TIMER_UPDATE) == T_RESPONSE)
     return NO_RESPONSE;
   }
-  block[counter].whole = mdb.read();
+  block[counter].whole = rX9Bits();
 /*Check if it is one of the three response codes*/
   if (block[0].part.data == ACK)
     return ACK;
@@ -50,7 +46,7 @@ uint8_t rX(uint8_t address) {                                        //1=ACK, 2=
   }
 /*Retrieve the rest of the block*/
   while (counter != 36)  {
-    while (!mdb.available()) {
+    while (rxBitsAvailable() == 0x00) {
       if (chronoLogic(TIMER_UPDATE) == T_INTER_BYTE) {  /*1mS of silence marks the end of a conversation*/
         if (checksum != block[counter].part.data)
           return DISTORTED;
@@ -69,7 +65,7 @@ uint8_t rX(uint8_t address) {                                        //1=ACK, 2=
     chronoLogic(TIMER_RESET);
     checksum += block[counter].part.data;
     counter++;
-    block[counter].whole = mdb.read();
+    block[counter].whole = rX9Bits();;
   }
 }
 
@@ -92,10 +88,10 @@ uint8_t tX(unsigned int pointer, uint8_t address) {
       block[counter].whole = (block[counter].whole | 0x100);  /*VMC always sets the mode bit on the first byte, unless it's ACK, NAK, or RET*/
   }
   while (pointer != counter) {
-    mdb.write(block[counter].whole);
+    tX9Bits(block[counter].part.mode, block[counter].part.data);
     checksum += block[counter].part.data;
     counter++;
-    mdb.flush();
+    tX9BitsFlush();
   }
 /*Send the last byte*/
   if (address != VMC_ADDRESS)
@@ -104,10 +100,21 @@ uint8_t tX(unsigned int pointer, uint8_t address) {
     if (counter != 0)                                                  /*ACK, NAK, and RET don't use a check byte if from the VMC*/
       block[counter].whole = (block[counter].whole | checksum);
   }
-  mdb.write(block[counter].whole);
+  tX9Bits(block[counter].part.mode, block[counter].part.data);
 /*Prepare for a response*/
   chronoLogic(TIMER_RESET);
   return rX(address);
 }
 
-#endif
+uint8_t parityBitCalc(uint8_t raw) {
+  uint8_t calculatedOddParity;
+  calculatedOddParity = 0x01;   /* #HardwareAdjust Swap this out for 0x00 to get Even Parity on different hardware*/
+  calculatedOddParity ^= (raw & 0x80) >> 7;
+  calculatedOddParity ^= (raw & 0x40) >> 6;
+  calculatedOddParity ^= (raw & 0x20) >> 5;
+  calculatedOddParity ^= (raw & 0x10) >> 4;
+  calculatedOddParity ^= (raw & 0x08) >> 3;
+  calculatedOddParity ^= (raw & 0x04) >> 2;
+  calculatedOddParity ^= (raw & 0x02) >> 1;
+  calculatedOddParity ^= raw & 0x01;
+}
