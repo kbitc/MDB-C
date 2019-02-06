@@ -3,7 +3,7 @@
 uint8_t chronoLogic(uint8_t command) {     /*Think of it like a stopwatch, but it returns a timing status rather than a time*/
   if (command == TIMER_RESET) {
       microseconds = micros();              //Save time of this command's execution.
-      return OK;
+      return OKKK;
   }
   else if (command == TIMER_UPDATE) {
     time_elapsed = micros() - microseconds;
