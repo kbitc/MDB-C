@@ -188,6 +188,84 @@ uint8_t startCashless () {
   return 0x00;
 }
 
+uint8_t configCashless () {
+  //For Setup - Config Data.
+    cashless.readerFeatureLevel = 0x03;
+    cashless.countryCurrencyCode[0] = 0x00;
+    cashless.countryCurrencyCode[1] = 0x01;         //Telephone code for usa.
+    cashless.countryCurrencyCodeLevel3[0] = 0x18;
+    cashless.countryCurrencyCodeLevel3[1] = 0x40;   //Level 3 code for USA
+    cashless.scaleFactor = 0x01;  //Pennies
+    cashless.decimalPlaces = 0x02;  //Murica.
+    cashless.applicationMaximumResponseTime = 0x00; //Default.
+    cashless.miscellaneousOptions = (
+      0x00
+      | 0x01       /*Comment out this line if refunds are unsupported*/
+      | 0x02       /*Comment out this line if multivend is unsupported*/
+      | 0x04       /*Comment out this line if cashless device has no display*/
+      | 0x08       /*Comment out this line if uninterested in CashSale reporting*/
+    );             /*Bit descriptions (n/a) (n/a) (n/a) (n/a) (refunds) (multivend-capability) (hasDisplay) (Vend/Cash tracking)*/
+    //For Expansion - PeripheralID.
+   // cashless.optionalFeatureBits[0] = 0x00;  //Not used
+   // cashless.optionalFeatureBits[1] = 0x00;  //Not used   OLD CODE, CHECK AND UPDATE TO DE NEW WEY
+   // cashless.optionalFeatureBits[2] = 0x00;  //Not used
+   // cashless.optionalFeatureBits[3] = 0x04;  //Bit descriptions (n/a) (n/a) (Always Idle) (Data Entry) (Negative Vend) (Multi-Currency/Lingual Support) (16 or 32 bit Monetary Format) (FTL Supported)
+    cashless.readerSerialNumber[0] = 0x00;
+    cashless.readerSerialNumber[1] = 0x00;
+    cashless.readerSerialNumber[2] = 0x00;
+    cashless.readerSerialNumber[3] = 0x00;
+    cashless.readerSerialNumber[4] = 0x00;
+    cashless.readerSerialNumber[5] = 0x00;
+    cashless.readerSerialNumber[6] = 0x00;
+    cashless.readerSerialNumber[7] = 0x00;
+    cashless.readerSerialNumber[8] = 0x00;
+    cashless.readerSerialNumber[9] = 0x00;
+    cashless.readerSerialNumber[10] = 0x00;
+    cashless.readerSerialNumber[11] = 0x00;  //Your very own serial number.
+    cashless.readerModelNumber[0] = 0x00;
+    cashless.readerModelNumber[1] = 0x00;
+    cashless.readerModelNumber[2] = 0x00;
+    cashless.readerModelNumber[3] = 0x00;
+    cashless.readerModelNumber[4] = 0x00;
+    cashless.readerModelNumber[5] = 0x00;
+    cashless.readerModelNumber[6] = 0x00;
+    cashless.readerModelNumber[7] = 0x00;
+    cashless.readerModelNumber[8] = 0x00;
+    cashless.readerModelNumber[9] = 0x00;
+    cashless.readerModelNumber[10] = 0x00;
+    cashless.readerModelNumber[11] = 0x00;  //Your very own model number.
+    //For display request
+    cashless.displayTime = 0xaa;            //Time unit is 0.1 seconds.
+    cashless.displayData[0] = 0x01;         //The product of these two must equal the lenght of the message.
+    cashless.displayData[1] = 0x0a;         //The product of these two must equal the length of the message.
+    cashless.displayData[2] = 0x4b;
+    cashless.displayData[3] = 0x49;         //ASCII characters. 4b 49 4c 4c 48 55 4d 41 4e 53
+    cashless.displayData[4] = 0x4c;         //                  K  I  L  L  H  U  M  A  N  S
+    cashless.displayData[5] = 0x4c;
+    cashless.displayData[6] = 0x48;
+    cashless.displayData[7] = 0x55;
+    cashless.displayData[8] = 0x4d;
+    cashless.displayData[9] = 0x41;
+    cashless.displayData[10] = 0x4e;
+    cashless.displayData[11] = 0x53;
+    cashless.displayData[31] = 0xff;
+    //For Begin Session
+    cashless.fundsAvailable[0] = 0xff;          //Scaled, set to 0xffff if unknown.
+    cashless.fundsAvailable[1] = 0xfe;
+        cashless.paymentMediaID[0] = 0xff;      //Set to 0xffffffff if unknown.
+        cashless.paymentMediaID[1] = 0xff;
+        cashless.paymentMediaID[2] = 0xff;
+        cashless.paymentMediaID[3] = 0xff;
+        cashless.paymentType = 0x40;            //Test Vend.
+        cashless.paymentData[0] = 0x00;
+        cashless.paymentData[1] = 0x00;
+            cashless.userLanguage[0] = 0x00;
+            cashless.userLanguage[1] = 0x00;
+            cashless.userCurrencyCode[0] = 0x00;
+            cashless.userCurrencyCode[1] = 0x00;
+            cashless.cardOptions = 0x00;
+}
+
 /*7.2  Incomplete*/
 uint8_t mainz() {
   if (rX9BitsAvailable() == 0x01)
@@ -1016,5 +1094,3 @@ uint8_t displayCancel(String data) {
     //cashless.displayCancel = 0x01;
     return 1;
 }
-
-
