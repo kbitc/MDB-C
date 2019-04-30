@@ -1,0 +1,2561 @@
+AC101
+AUDIT_MODULE_SERIAL_NUMBER
+Configures field AM101 (not post manufacturer configurable)
+AN 01 20
+AC102
+AUDIT_MODULE_MODEL_NUMBER
+Configures field AM102 (not post manufacturer configurable)
+AN 01 20
+AC103
+AUDIT_MODULE_SOFTWARE_REVISION
+Configures field AM103 (not post manufacturer configurable)
+No 01 04
+AC104
+USER_DEFINED_FIELD
+Configures field AM104
+AN 01 12
+AC105
+AUDIT_MODULE_ASSET_NUMBER
+Configures field AM105
+AN 01 20
+AM101
+AUDIT_MODULE_SERIAL_NUMBER
+Identification number of the Audit Module/ Comms Gateway. Typically includes a three character supplier ID code from Appendix B. This number may only be set by the Manufacturer. AM1 block is optional. If any AM1 data is transmitted, then AM101 becomes mandatory.
+AN 01 20
+AM102
+AUDIT_MODULE_MODEL_NUMBER
+Model number or description of the Audit Module / Comms Gateway.
+AN 01 20
+AM103
+AUDIT_MODULE_SOFTWARE_REVISION
+Software revision number of the Audit Module / Comms Gateway.
+No 01 04
+AM104
+USER_DEFINED_FIELD
+User Defined Data
+AN 01 12
+AM105
+AUDIT_MODULE_ASSET_NUMBER
+Audit Module / Comms Gateway Asset Number reference for accounting purposes. Separate from serial number.
+AN 01 20
+BA101
+BILL_VALIDATOR_SERIAL_NUMBER
+Identification number of bill validator. Typically, includes a three character supplier ID code from Appendix B (not post manufacturer configurable)
+AN 01 20
+BA102
+BILL_VALIDATOR_MODEL_NUMBER
+Model Number or description of bill validator (not post manufacturer configurable)
+AN 01 20
+BA103
+BILL_VALIDATOR_SOFTWARE_REVISION
+Software revision of the bill validator (not post manufacturer configurable).
+AN 01 04
+BA104
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+BA105
+BILL_VALIDATOR_ASSET_NUMBER
+Asset number used for tracking purposes. Programmable field.
+AN 01 20
+BC101
+CONTROL_BOARD_SERIAL_NUMBER
+Configures field CB101 (not post manufacturer configurable)
+AN 01 20
+BC102
+CONTROL_BOARD_MODEL_NUMBER
+Configures field CB102 (not post manufacturer configurable)
+AN 01 20
+BC103
+CONTROL_BOARD_SOFTWARE_REVISION
+Configures field CB103 (not post manufacturer configurable)
+AN 01 20
+BC104
+USER_DEFINED_FIELD
+Configures field CB104
+AN 01 12
+BC105
+CONTROL_BOARD_ASSET_NUMBER
+Configures field CB105
+AN 01 20
+BC201
+BILL_VALIDATOR_SERIAL_NUMBER
+Configures field BA101 (not post manufacturer configurable)
+AN 01 20
+BC202
+BILL_VALIDATOR_MODEL_NUMBER
+Configures field BA102 (not post manufacturer configurable)
+AN 01 20
+BC203
+BILL_VALIDATOR_SOFTWARE_REVISION
+Configures field BA103 (not post manufacturer configurable)
+N0 01 04
+BC204
+USER_DEFINED_FIELD
+Configures field BA104
+AN 01 12
+BC205
+BILL_VALIDATOR_ASSET_NUMBER
+Configures field BA105
+AN 01 20
+CA101
+COIN_MECH_SERIAL_NUMBER
+Identification number of the coin mechanism. This number may only be set by the Manufacturer. Typically includes a three character supplier ID code from Appendix B. MDB level 2 changers may transmit a blank field but all MDB level 3 and above changers must send valid data (not post manufacturer configurable). CA1 block is optional. If any CA1 data is
+AN 01 20
+CA102
+COIN_MECH_MODEL_NUMBER
+Model number or description of the coin mechanism. MDB level 2 changers may transmit a blank field but all MDB level 3 and above changers must send valid data.
+AN 01 20
+CA103
+COIN_MECH_SOFTWARE_REVISION
+Software revision number of the coin mechanism. MDB level 2 changers may transmit a blank field but all MDB level 3 and above changers must send valid data.
+N0 01 04
+CA104
+USER_DEFINED_FIELD
+Use a Defined Data
+AN 01 12
+CA105
+COIN_MECH_ASSET_NUMBER
+Asset Number reference for accounting purposes. Separate from serial number.
+AN 01 20
+CA201
+VALUE_OF_CASH_SALES_SINCE_INITIALISATION
+Value of all cash sales. Non-Resettable.
+Nc 01 08
+CA202
+Number of CASH_ Vends SinceINITIALISATION
+Number of all cash vends. Non-Resettable.
+N0 01 06
+CA203
+VALUE_OF_CASH_SALES_SINCE_ Last Reset Value of all cash sales. Resettable.
+Nc 01 08
+CA204
+Number of CASH_ Vends Since Last Reset Number of all cash vends. Resettable.
+N0 01 06
+CA301
+VALUE_OF_CASH_ In Since Last Reset Value of all cash in. (Coins + Banknotes) Resettable.
+Nc 01 08
+CA302
+VALUE_OF_CASH_ To CASH_ Box Since Last Reset Value of cash sent to the cashbox. (Typically today this is coins only, not banknotes, tokens are recorded separately). Resettable.
+Nc 01 08
+CA303
+VALUE_OF_CASH_ to Tubes Since Last Reset Value of all coins sent to the inventory tubes, including sales and manually filled. Does not include value of free vend tokens.
+Nc 01 08
+CA304
+Value of Bills In Since Last Reset
+Total value of all bills (banknotes) accepted. Does not include value of free vend tokens.  This format is used in a wide installed base and must be maintained in existing and new designs for 5 years from the introduction of Version 6.0 (until 2009).  After this date, new designs need only send CA309. Check with equipment suppliers to verify their formatting.
+Implemented formats include: 1) In  most North American implementations, the value of the note is divided by 100, and is sent as an N0 data type.  Example:  A $5.00 bill is sent as 5.  A $20.00 bill is sent as 20.
+2) In most European implementations, the value of the note is not divided by 100, and is sent as an Nc data type.  Example:  A €5.00 bill is sent as 500.  A €20.00 bill is sent as 2000.
+Resettable.
+N0 / Nc
+01 08
+CA305
+VALUE_OF_CASH_ In SinceINITIALISATION
+Value of cash in from all sources (coins and paper currency). Non-Resettable.
+Nc 01 08
+CA306
+VALUE_OF_CASH_ To CASH_ Box SinceINITIALISATION
+Value of cash sent to the cashbox. (Typically today this is coins only, no banknotes). Does not include value of free vend tokens. Non-Resettable.
+Nc 01 08
+CA307
+VALUE_OF_CASH_ To Tubes Since Initilisation
+Value of all coins sent to the inventory tubes, including sales and manually filled. Does not include value of free vend tokens. Non-Resettable.
+Nc 01 08
+CA308
+Value of Bills In SinceINITIALISATION
+Total value of all bills (banknotes) accepted. Does not include value of free vend tokens.
+This format is used in a wide installed base and must be maintained in existing and new designs for 5 years from the introduction of Version 6.0 (until 2009). After this date, new designs need only send CA310. Check with equipment suppliers to verify their formatting.
+Implemented formats include: 1) In  most North American implementations, the value of the note is divided by 100, and is sent as an N0 data type.  Example:  A $5.00 bill is sent as 5.  A $20.00 bill is sent as 20.
+2) In most European implementations, the value of the note is not divided by 100, and is sent as an Nc data type.  Example:  A €5.00 bill is sent as 500.  A €20.00 bill is sent as 2000.
+Non-Resettable.
+N0 / Nc
+01 08
+CA309
+Value of Bills In Since Last Reset
+Total value of all bills (banknotes) accepted. Does not include value of free vend tokens.  Example:  A $5.00 bill is sent as 500.  A $20.00 bill is sent as 2000. Resettable.
+Nc 01 08
+CA310
+Value of Bills In SinceINITIALISATION
+Total value of all bills (banknotes) accepted. Does not include value of free vend tokens.  Example:  A $5.00 bill is sent as 500.  A $20.00 bill is sent as 2000. Non-Resettable.
+Nc 01 08
+CA311
+Value of Bills To Recycler Since Last Reset
+Value of all bills sent to the recycler, including sales and manual fill modes. Does not include value of free vend coupons.  Example:  A $5.00 bill is sent as 500.  A $20.00 bill is sent as 2000. Resettable.
+Nc 01 08
+CA312
+Value of Bills To Recycler SinceINITIALISATION
+Value of all bills sent to the recycler, including sales and manual fill modes. Does not include value of free vend coupons.  Example:  A $5.00 bill is sent as 500.  A $20.00 bill is sent as 2000. Non-Resettable.
+Nc 01 08
+CA401
+VALUE_OF_CASH_ Dispensed Since Last Reset
+Total value paid out as change plus the value manually dispensed. (Typically coins only). Resettable.
+Nc 01 08
+CA402
+VALUE_OF_CASH_ Manually Dispensed Since Last Reset
+Total value dispensed manually. (Typically coins only) Resettable.
+Nc 01 08
+CA403
+VALUE_OF_CASH_ Dispensed SinceINITIALISATION
+Total value paid out as change plus the value manually dispensed. (Typically coins only). Non-Resettable.
+Nc 01 08
+CA404
+VALUE_OF_CASH_ Manually Dispensed Since Initiatlisation
+Total value dispensed manually. (Typically coins only) Non-Resettable.
+Nc 01 08
+CA405
+Value of Bills Dispensed Since Last Reset
+Total value paid out as change plus the value manually dispensed. (Typically Bills only, not coupons or tokens). Resettable.
+Nc 01 08
+CA406
+Value of Bills Manually Dispensed Since Last Reset
+Total value dispensed manually. (Typically bills only, not coupons or tokens) Resettable.
+Nc 01 08
+CA407
+Value of Bills Dispensed To Recycler Since Last Reset
+Total value manually dispensed from the recycler to the cashbox. (Typically bills only, not coupons or tokens). Resettable.
+Nc 01 08
+CA408
+Value of Bills Dispensed SinceINITIALISATION
+Total value paid out as change plus the value manually dispensed. (Typically bills only, not coupons or tokens). Non-Resettable.
+Nc 01 08
+CA409
+Value of Bills Manually Dispensed Since Initiatlisation
+Total value dispensed manually. (Typically bills only, not coupons or tokens) Non-Resettable.
+Nc 01 08
+CA410
+Value of Bills Manually Dispensed To Recycler Since Initiatlisation
+Total value manually dispensed from the recycler to the cashbox. (Typically bills only, not coupons or tokens) Non-Resettable.
+Nc 01 08
+CA501
+Number of Power Outages Since Last Reset
+Total number of power down - up cycles. Resettable. Superseded by event audit see reference EA701
+N0 01 08
+CA502
+Number of Power Outages SinceINITIALISATION
+Total number of power down - up cycles. Non-Resettable. Superseded by event audit see reference EA702
+N0 01 08
+CA601
+Number Of Reads Performed SinceINITIALISATION
+Total number of data collection reads performed. Non-Resettable. Superseded by event audit see reference EA301
+N0 01 08
+CA602
+Number of Door Openings Since initialsiation
+The number of times the vending machine door has been opened. Non Resettable Superseded by event audit see reference EA201/202
+N0 01 08
+CA701
+VALUE_OF_CASH_ Discounts Since Last Reset
+Value of cash discounts given. (vend price - price paid = discount value). Resettable.
+Nc 01 08
+CA702
+VALUE_OF_CASH_ Value of cash discounts given.
+Nc 01 08
+Discounts SinceINITIALISATION
+(vend price - price paid = discount value). Non-Resettable.
+CA703
+Number of CASH_ Discounts Since Last Reset
+Number of cash discounts given. Resettable.
+N0 01 08
+CA704
+Number of CASH_ Discounts SinceINITIALISATION
+Number of cash discounts given. Non-Resettable.
+N0 01 08
+CA705
+VALUE_OF_CASH_SURCHARGES
+Since Last Reset
+Value of cash surcharges given. (price paid - vend paid = surcharge value). Resettable.
+Nc 01 08
+CA706
+VALUE_OF_CASH_SURCHARGES
+Since Initialization
+Value of cash surcharges given. (price paid - vend paid = surcharge value). Non-Resettable.
+Nc 01 08
+CA707
+Number of CASH_SURCHARGES
+Since Last Reset
+Number of cash surcharges given. Resettable.
+N0 01 08
+CA708
+Number of CASH_SURCHARGES
+SinceINITIALISATION
+Number of cash surcharges given. Non-Resettable.
+N0 01 08
+CA801
+VALUE_OF_CASH_ Overpay Since Last Reset
+Value of cash overpay received. (Inserted money - change paid - vend price = overpay value). Resettable.
+Nc 01 08
+CA802
+VALUE_OF_CASH_ Overpay SinceINITIALISATION
+Value of cash overpay received. (Inserted money - change paid - vend price = overpay value). Non-Resettable.
+Nc 01 08
+CA901
+Value of Pay Vends Exact Change Since Last Reset
+Value of the vends performed while in an exact change condition. Resettable.
+Nc 01 08
+CA902
+Value of Pay Vends Exact Change SinceINITIALISATION
+Value of the vends performed while in an exact change condition. Non-Resettable.
+Nc 01 08
+CA1001
+VALUE_OF_CASH_ Filled Since Last Reset
+Value of all coins manually added to the machine. (filled inventory tubes) Resettable.
+Nc 01 08
+CA1002
+VALUE_OF_CASH_ Filled SinceINITIALISATION
+Value of all coins manually added to the machine. (filled inventory tubes) Non-Resettable.
+Nc 01 08
+CA1003
+Value of Bills Filled Since Last Reset
+Value of all bills manually added to the machine. (filled recycler) Resettable.
+Nc 01 08
+CA1004
+VALUE_OF_CASH_ Filled SinceINITIALISATION
+Value of all bills manually added to the machine. (filled recycler) Non-Resettable.
+Nc 01 08
+CA1101
+Value of Accepted Coin
+Value of the coin being reported on.
+Nc 01 08
+CA1102
+Number of Coins In Since Last Reset
+Number of coins of this value (CA1101) accepted. Resettable.
+N0 01 08
+CA1103
+Number of Coins To CASH_ Box Since Last Reset
+Number of coins of this value (CA1101) accepted and sent to the cashbox. Resettable.
+N0 01 08
+CA1104
+Number of Coins To Tubes Since Last Reset
+Number of coins of this value (CA1101) accepted and sent to the inventory tubes Resettable.
+N0 01 08
+CA1105
+Number of Coins In SinceINITIALISATION
+Number of coins of this value (CA1101) accepted. Non-Resettable.
+N0 01 08
+CA1106
+Number of Coins To CASH_ Box SinceINITIALISATION
+Number of coins of this value (CA1101) accepted and sent to the cashbox. Non-Resettable.
+N0 01 08
+CA1107
+Number of Coins To Tubes SinceINITIALISATION
+Number of coins of this value (CA1101) accepted and sent to the inventory tubes Non-Resettable.
+N0 01 08
+CA1108
+Age of Coin Number to indicate age of the coin. Lowest
+N0 01 01
+number is oldest, base 0, So if two coins of the same denomination are accepted e.g. UK 5p, then old = 0, 5p new = 1 and so on. CA1109 Country of Origin International telephone code for coins of this value (CA1101) for non standard country of origin. Default country is identified by element ID402.
+N0 01 03
+CA1201
+Dispensed Value Coin
+Value of the dispensed coin being reported on.
+Nc 01 08
+CA1202
+Number of Coins Dispensed Since Last Reset
+Number of coins of this value (CA1201) paid out as change plus manually dispensed. Resettable.
+N0 01 08
+CA1203
+Number of Coins Manually Dispensed Since Last Reset
+Number of coins of this value (CA1201) manually dispensed. Resettable.
+N0 01 08
+CA1204
+Number of Coins Dispensed SinceINITIALISATION
+Number of coins of this value (CA1201) paid out as change plus manually dispensed. Non-Resettable.
+N0 01 08
+CA1205
+Number of Coins Manually Dispensed SinceINITIALISATION
+Number of coins of this value (CA1201) manually dispensed. Non-Resettable.
+N0 01 08
+CA1206
+Age of Coin
+Number to indicate age of the coin. Lowest number is oldest, base 0. So if two coins of the same denomination are dispensed e.g. UK 5p, then old = 0, 5p new = 1 and so on.
+N0 01 01
+CA1207
+Country of Origin International telephone code for coins of this value (CA1201) for non standard country of origin. Default country is identified by element ID402.
+N0 01 03
+CA1301
+Manually Filled Coin Value
+Value of the coin manually filled being reported on.
+Nc 01 08
+CA1302
+Number of Coins Filled Since Last Reset
+Number of coins of this value (CA1301) manually filled. Resettable.
+N0 01 08
+CA1303
+Number of Coins Filled SinceINITIALISATION
+Number of coins of this value (CA1301) manually filled. Non-Resettable.
+N0 01 08
+CA1304
+Age of Coin Number to indicate age of the coin. Lowest number is oldest, base 0. So if two coins of the same denomination are filled e.g. UK 5p, then old = 0, 5p new = 1 and so on.
+N0 01 01
+CA1305
+Country of Origin International telephone code for non standard country of origin. Default country is identified by element ID402.
+N0 01 03
+CA1401
+Bill Value Value of bill being reported on.
+Nc 01 08 CA1402 Number of Bills In Since Last Reset Number of bills of this value (CA1401) validated but returned by the VMD as well as those that are routed to the stacker. Resettable.
+N0 01 08 CA1403 Number of Bills To Stacker Since Last Reset Number of bills of this value (CA1401) validated and routed to the stacker Resettable.
+N0 01 08 CA1404 Number of Bills In SinceINITIALISATION Number of bills of this value (CA1401) validated but returned by the VMC as well as those that are routed to the stacker. Non-Resettable.
+N0 01 08 CA1405 Number of Bills To Stacker SinceINITIALISATION Number of bills of this value (CA1401) validated and routed to the stacker Non-Resettable.
+N0 01 08 CA1501 Value of Tube Contents Value of coins stored in all tubes of the coin changegiver.
+Nc 01 08 CA1502 Block No Tube 1 = Coin Type 0-7, Tube 2 = Coin Type 8-15
+Tube 1 indicates CA1503-CA1510 Refers to Coin Type 0-7 Tube 2 indicates CA1503-CA1510 Refers to Coin Type 8-15
+AN 01 05
+CA1503
+Coin Type 0 or 7 count
+Number of coins in tube 0 or 7
+N0 01 03
+CA1504
+Coin Type 1 or 8 count
+Number of coins in tube 1 or 8
+N0 01 03
+CA1505
+Coin Type 2 or 9 count
+Number of coins in tube 2 or 9
+N0 01 03
+CA1506
+Coin Type 3 or 10 count
+Number of coins in tube 3 or 10
+N0 01 03
+CA1507
+Coin Type 4 or 11 count
+Number of coins in tube 4 or 11
+N0 01 03
+CA1508
+Coin Type 5 or 12 count
+Number of coins in tube 5 or 12
+N0 01 03
+CA1509
+Coin Type 6 or 13 count
+Number of coins in tube 6 or 13
+N0 01 03
+CA1510
+Coin Type 7 or 14 count
+Number of coins in tube 7 or 14
+N0 01 03
+CA1601
+Value Credited From Machine Since Last Reset
+Value credited from vending machine to coin mechanism. This is the “Negative Vend” from specification BDV001. Resettable.
+Nc 01 08
+CA1602
+Value Credited From Machine SinceINITIALISATION
+Value credited from vending machine to coin mechanism. This is the “Negative Vend” from specification BDV001. Non Resettable.
+Nc 01 08
+CA1701
+Coin Type Number (per MDB coin tube)
+The coin type number as referred to in the MDB interface specification. If not an MDB system, the number represents the coin’s position in the coin set starting with the lowest value coin accepted. Note, if two or more vintage of the same coin is accepted, the oldest one is first.
+N0 01 03
+CA1702
+Value of Coin The cash value of the coin (units base, not scaled units). Examples for Canadian coins:  Nickel 5 $1 Dollar 100
+Dime 10 $2 Dollar 200
+Nc 01 08
+Quarter 25
+CA1703
+Number of Coins in Tube
+The interim number of coins in the coin tube (or tubes if multiple tubes per coin) that are not typically reported by the coin mech during normal vending operations. Note that this is the “best known tube count” and may be inaccurate if coins were manually added or removed by hand.
+N0 01 08
+CA1704
+Number of Coins inserted during Controlled Manual Fill
+The interim number of coins inserted while the changer was in a controlled- manual fill mode. Controlled-manual fill indicates that the coins are being inserted under the control of the coin mech or VMC. Coins are not being loaded by hand through the tops of the tubes.
+N0 01 08
+CA1705
+Number of Coins Dispensed during Controlled Manual Invent
+The interim number of coins dispensed while the changer was in a controlled-manual invent mode. Controlled-manual invent indicates that the coins are being dispensed under the control of the coin mech or VMC. Coins are not being removed by hand by “dumping” the tubes.
+N0 01 08
+CA1706
+Coin Tube Is Full Defined values:   0 or empty (recommended) = Tube(s) NOT full   1 = Tube is currently full
+N0 01 01
+CA1801
+Destination of Coin Defined values: 0=Coin sent to tubes 1=Coin sent to cash
+N0 01 01
+CA1802
+Value of accepted coin
+as per CA1702
+Nc 01 08
+CA1901
+Value of Accepted Bill
+Value of the bill being reported on.
+Nc 01 08
+CA1902
+Number of Bills In Since Last Reset
+Number of bills of this value (CA1901) accepted. Resettable.
+N0 01 08
+CA1903
+Number of Bills To CASH_ Box Since Last Reset
+Number of bills of this value (CA1901) accepted and sent to the cashbox. Resettable.
+N0 01 08
+CA1904
+Number of Bills To Recycler Since Last Reset
+Number of bills of this value (CA1901) accepted and sent to the recycler Resettable.
+N0 01 08
+CA1905
+Number of Bills In SinceINITIALISATION
+Number of bills of this value (CA1901) accepted. Non-Resettable.
+N0 01 08
+CA1906
+Number of Bills To CASH_ Box SinceINITIALISATION
+Number of bills of this value (CA1901) accepted and sent to the cashbox. Non-Resettable.
+N0 01 08
+CA1907
+Number of Bills To Recycler SinceINITIALISATION
+Number of bills of this value (CA1901) accepted and sent to the recycler Non-Resettable.
+N0 01 08
+CA1908
+Age of Bill Number to indicate age of the bill. Lowest number is oldest, base 0, So if two bills of the same denomination are accepted e.g. UK 1£, then old = 0, 1£ new = 1 and so on.
+N0 01 01
+CA1909
+Country of Origin International telephone code for bills of this value (CA1901) for non standard country of origin. Default country is identified by element ID402.
+N0 01 03
+CA2001
+Dispensed Value Bill
+Value of the dispensed bill being reported on.
+Nc 01 08
+CA2002
+Number of Bills Dispensed Since Last Reset
+Number of bills of this value (CA2001) paid out as change plus manually dispensed. Resettable.
+N0 01 08
+CA2003
+Number of Bills Manually Dispensed Since Last Reset
+Number of bills of this value (CA2001) manually dispensed. Resettable.
+N0 01 08
+CA2004
+Number of Bills Manually Dispensed To CASH_box Since Last Reset
+Number of bills of this value (CA2001) manually dispensed from the recycler to the cashbox. Resettable.
+N0 01 08
+CA2005
+Number of Bills Dispensed Since Initialisation
+Number of bills of this value (CA2001) paid out as change plus manually dispensed.  Non-Resettable
+N0 01 08
+CA2006
+Number of Bills Manually Dispensed SinceINITIALISATION
+Number of bills of this value (CA2001) manually dispensed. Non-Resettable.
+N0 01 08
+CA2007
+Number of Bills Manually Dispensed To CASH_box SinceINITIALISATION
+Number of bills of this value (CA2001) manually dispensed from the recycler to the cashbox. Non-Resettable.
+N0 01 08
+CA2008
+Age of Bill
+Number to indicate age of the bill. Lowest number is oldest, base 0. So if two bills of the same denomination are dispensed e.g. UK 1£, then old = 0, 1£ new = 1 and so on.
+N0 01 01
+CA2009
+Country of Origin International telephone code for bills of this value (CA2001) for non standard country of origin. Default country is identified by element ID402.
+N0 01 03
+CA2101
+Manually Filled Bill Value
+Value of the bill manually filled being reported on.
+Nc 01 08
+CA2102
+Number of Bills Filled Since Last Reset
+Number of bills of this value (CA2101) manually filled. Resettable.
+N0 01 08
+CA2103
+Number of Bills Filled SinceINITIALISATION
+Number of bills of this value (CA2101) manually filled. Non-Resettable.
+N0 01 08
+CA2104
+Age of Bill Number to indicate age of the bill. Lowest number is oldest, base 0. So if two bills of the same denomination are filled e.g. UK 1£, then old = 0, 1£ new = 1 and so on.
+N0 01 01
+CA2105
+Country of Origin International telephone code for non standard country of origin. Default country is identified by element ID402.
+N0 01 03
+CA2201
+Value of Recycler Contents
+Value of all bills stored in the bill recycler.
+Nc 01 08
+CA2202
+Block No Store 1 = Bill Type 0-7, Store 2 = Bill Type 8-15
+Store 1 indicates CA2203-CA2210 Refers to Bill Type 0-7 Store 2 indicates CA2203-CA2210 Refers to Bill Type 8-15
+AN 01 05
+CA2203
+Bill Type 0 or 7 count
+Number of bills in recycler 0 or 7
+N0 01 03
+CA2204
+Bill Type 1 or 8 count
+Number of bills in recycler 1 or 8
+N0 01 03
+CA2205
+Bill Type 2 or 9 count
+Number of bills in recycler 2 or 9
+N0 01 03
+CA2206
+Bill Type 3 or 10 count
+Number of bills in recycler 3 or 10
+N0 01 03
+CA2207
+Bill Type 4 or 11 count
+Number of bills in recycler 4 or 11
+N0 01 03
+CA2208
+Bill Type 5 or 12 count
+Number of bills in recycler 5 or 12
+N0 01 03
+CA2209
+Bill Type 6 or 13 count
+Number of bills in recycler 6 or 13
+N0 01 03
+CA2210
+Bill Type 7 or 14 count
+Number of bills in recycler 7 or 14
+N0 01 03
+CA2301
+Bill Type Number (per MDB bill store)
+The bill type number as referred to in the MDB interface specification. If not an MDB system, the number represents the bill’s position in the bill set starting with the lowest value bill accepted. Note, if two or more vintage of the same bill is accepted, the oldest one is first.
+N0 01 03
+CA2302
+Value of Bill The cash value of the bill (units base, not scaled units). Examples for US bills:  $1 Dollar 100
+$2 Dollar 200
+$5 Dollar 500 …
+Nc 01 08
+CA2303
+Number of Bills in Store
+The interim number of bills in the bill store (or stores if multiple tubes per bill) that are not typically reported by the bill mech during normal vending operations. Note that this is the “best known tube count” and may be inaccurate if bills were manually added or removed by hand.
+N0 01 08
+CA2306
+Bill Store Is Full Defined values:   0 or empty (recommended) = Store(s) NOT full   1 = Store is currently full
+N0 01 01
+CA2401
+Destination of Bill Defined values: 0=Bill sent to recycler 1=Bill sent to cash
+N0 01 01
+CA2402
+Value of accepted bill
+as per CA2302
+Nc 01 08
+CB101
+CONTROL_BOARD_SERIAL_NUMBER
+Identification number of the Control Board. This number may only be set by the Manufacturer. CB1 block is optional. If any CB1 data is transmitted, then CB101 becomes mandatory.
+AN 01 20
+CB102
+CONTROL_BOARD_MODEL_NUMBER
+Model number or description of the Control Board.
+AN 01 20
+CB103
+CONTROL_BOARD_SOFTWARE_REVISION
+Software revision number of the Control Board.
+AN 01 20
+CB104
+USER_DEFINED_FIELD
+User Defined Data
+AN 01 12
+CB105
+CONTROL_BOARD_ASSET_NUMBER
+Control Board Asset Number reference for accounting purposes. Separate from serial number.
+AN 01 20
+CC101
+COIN_MECH_SERIAL_NUMBER
+Configures field CA101 (not post manufacturer configurable)
+AN 01 20
+CC102
+COIN_MECH_MODEL_NUMBER
+Configures field CA102 (not post manufacturer configurable)
+AN 01 20
+CC103
+COIN_MECH_SOFTWARE_REVISION
+Configures field CA103 (not post manufacturer configurable)
+N0 01 04
+CC104
+USER_DEFINED_FIELD
+Configures field CA104
+AN 01 12
+CC105
+COIN_MECH_ASSET_NUMBER
+Configures field CA105
+AN 01 20
+DA101
+CASHLESS1_SERIAL_NUMBER
+Identification number of the system (card, key or other). Typically includes a three character supplier ID code from Appendix B (not post manufacturer configurable).
+AN 01 20
+DA102
+CASHLESS1_MODEL_NUMBER
+Model number or description of the system (card, key or other) cashless 1 unit.
+AN 01 20
+DA103
+CASHLESS1_SOFTWARE_REVISION
+Software revision number of the system (card, key or other) cashless 1 unit.
+N0 01 04
+DA104
+USER_DEFINED_FIELD
+User Defined Data
+AN 01 12
+DA105
+CASHLESS1_ASSET_NUMBER
+Asset Number reference for accounting purposes. Separate from serial number.
+AN 01 20
+DA201
+Value of CASHLESS1_SALES_SINCE_ Initiatlisation Value of all CASHLESS1_ sales. Non-Resettable.
+Nc 01 08
+DA202
+Number Of CASHLESS1_ Vends SinceINITIALISATION
+Number of all CASHLESS1_ vends. Non-Resettable.
+N0 01 08
+DA203
+Value of CASHLESS1_SALES_SINCE_ Last Reset Value of all CASHLESS1_ sales. Resettable.
+Nc 01 08
+DA204
+Number of CASHLESS1_ Vends Since Last Reset Number of all CASHLESS1_ vends. Resettable.
+N0 01 06
+DA205
+USER_DEFINED_FIELD
+User Defined Data
+AN 01 12
+DA301
+Value Debited From CASHLESS1_ SinceINITIALISATION
+Value debited from CASHLESS1_. Non-Resettable.
+Nc 01 08
+DA302
+Value Debited From CASHLESS1_ Since ast Reset Value debited from CASHLESS1_. Resettable.
+Nc 01 08
+DA303
+USER_DEFINED_FIELD
+User Defined Data
+AN 01 12
+DA401
+Value Credited To Value credited to CASHLESS1_.
+Nc 01 08
+CASHLESS1_ SinceINITIALISATION
+Non-Resettable.
+DA402
+Value Credited To CASHLESS1_ Since Last Reset
+Value credited to CASHLESS1_. Resettable.
+Nc 01 08
+DA403
+USER_DEFINED_FIELD
+User Defined Data
+AN 01 12
+Value of CASHLESS1_ Discounts Since Last Reset Value of CASHLESS1_ discounts given. (vend price - price paid = discount value). Resettable.
+Nc 01 08
+DA502
+Number Of Discount CASHLESS1_ Vends Since Last Reset Number of CASHLESS1_ discounted vends given. Resettable.
+N0 01 06
+DA503
+Value Of CASHLESS1_ Discounts SinceINITIALISATION
+Value of CASHLESS1_ discounts given. (vend price - price paid = discount value). Non-Resettable.
+Nc 01 08
+DA504
+Number Of Discount CASHLESS1_ Vends SinceINITIALISATION
+Number of  CASHLESS1_ discounted vends given. Non-Resettable.
+N0 01 08
+DA505
+Value of CASHLESS1_SURCHARGES
+Since Last Reset Value of CASHLESS1_ surcharges given. (price paid – vend price = surcharge value). Resettable.
+Nc 01 08
+DA506
+Number of Surcharge CASHLESS1_ Vends Since Last Reset Number of CASHLESS1_ surcharge vends given. Resettable.
+N0 01 06
+DA507
+Value Of CASHLESS1_SURCHARGES_SINCE_INITIALISATION
+Value of Cashless #1 surcharges given. (price paid – vend price = surcharge value). Non-Resettable.
+Nc 01 08
+DA508
+Number of Surcharge CASHLESS1_ Vends SinceINITIALISATION Number of CASHLESS1_ surcharge vends given. Non-Resettable.
+N0 01 08
+DA601
+Revaluation Incentive on CASHLESS1_ SinceINITIALISATION
+The value of the additional money added to CASHLESS1_ as an incentive. E.g. $10 cash input, $11 credited to card, Incentive is $1 Non-Resettable
+Nc 01 08
+DA602
+Revaluation Incentive on CASHLESS1_ Since Last Reset
+The value of the additional money added to CASHLESS1_ as an incentive. E.g. $10 cash input, $11 credited to card, Incentive is $1 Resettable.
+Nc 01 08
+DA701
+CASHLESS1_ User Group Number
+CASHLESS1_ User group being reported on.
+N0 01 13
+DA702
+CASHLESS1_ User Group Net Sales SINCE_ last reset.
+Net sale (equal to the value deducted from the cards) of the user group in DA701 Resettable.
+Nc 01 08
+DA703
+User Group Value Added To CASHLESS1_ SINCE_ last reset
+Revaluation andINITIALISATION (equal to the value added to the cards) of the user group in DA701 Resettable.
+Nc 01 08
+DA704
+CASHLESS1_ User Group Discounts SINCE_ last reset
+Discount deducted from the standard prices (showing up the net sale prices) of the user group in DA701. Resettable.
+Nc 01 08
+DA705
+Number of products sold to CASHLESS1_ user group SINCE_ initialisation
+This is the number of paid vends from all payment sources of the user group in DA701 SINCE_ initialisation. Non-resettable.
+N0 01 08
+DA706
+Number of products sold to CASHLESS1_ user group SINCE_ last reset
+This is the number of paid vends from all payment sources of the user group in DA701 since last reset. Resettable.
+N0 01 06
+DA707
+CASHLESS1_ User Group Net Sales SINCE_ initialization
+Net sale (equal to the value deducted from the cards) of the user group in DA701 Non-resettable.
+Nc 01 08
+DA708
+User Group Value Revaluation andINITIALISATION (equal to the value
+Nc 01 08
+Added To CASHLESS1_ SINCE_ initialization
+added to the cards) of the user group in DA701 Non-resettable.
+DA709
+CASHLESS1_ User Group Discounts SINCE_ initialization
+Discount deducted from the standard prices (showing up the net sale prices) of the user group in DA701. Non-resettable.
+Nc 01 08
+DA801
+CASHLESS1_ Funds Used for Sale
+This field contains the amount of CASHLESS1_ funds used for the last sale. It is an event-driven field and is intended to be sent after every vend which uses CASHLESS1_ funds.
+Nc 01 08
+DA901
+Value of CASHLESS Overpay Since Last Reset
+Value of cashless overpay received. (Inserted cashless value – revalued amount - vend price = overpay value). Resettable.
+Nc 01 08
+DA902
+Value of CASHLESS Overpay SinceINITIALISATION
+Value of cashless overpay received. (Inserted cashless value – revalued amount - vend price = overpay value). Non-Resettable.
+Nc 01 08
+DA1001
+CASHLESS1_ Number of Mixed Payment Vends Since Initialization
+The number of vends with cashless 1 where the sale is a mixed paid sale (cash and cashless). Non-Resettable.
+N0 01 08
+DA1002
+CASHLESS1_ Value of Mixed Payment CASHLESS Amount Since Initialization
+The value of the cashless amount paid with cashless 1 where the sale is a mixed sale (cash and cashless). Non-Resettable.
+Nc 01 08
+DA1003
+CASHLESS1_ Number of Mixed Payment Vends Since Last Reset
+The number of vends with cashless 1 where the sale is a mixed paid sale (cash and cashless).  Resettable.
+N0 01 06
+DA1004
+CASHLESS1_ Value of Mixed
+The value of the cashless amount paid with cashless 1 where the sale is a mixed sale (cash and
+Nc 01 08
+Payment CASHLESS Amount Since Last Reset
+cashless). Resettable.
+DB101
+CASHLESS2_SERIAL_NUMBER
+Identification number of the system (card, key or other). Typically includes a three character supplier ID code from Appendix B (not post manufacturer configurable).
+AN 01 20
+DB102
+CASHLESS2_MODEL_NUMBER
+Model number or description of the system (card, key or other) cashless 2 unit.
+AN 01 20
+DB103
+CASHLESS2_SOFTWARE_REVISION
+Software revision number of the system (card, key or other) cashless 2 unit.
+N0 01 04
+DB104
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+DB105
+CASHLESS2_ASSET_NUMBERASSET_NUMBER reference for accounting purposes. Separate from serial number.
+AN 01 20
+DB201
+Value of CASHLESS2_SALES_SINCE_ Initiatlisation Value of all CASHLESS2_ sales. Non-Resettable.
+Nc 01 08
+DB202
+Number Of CASHLESS2_ Vends SinceINITIALISATION Number of all CASHLESS2_ vends. Non-Resettable.
+N0 01 08
+DB203
+Value of CASHLESS2_SALES_SINCE_ Last Reset Value of all CASHLESS2_ sales. Resettable.
+Nc 01 08
+DB204
+Number of CASHLESS2_ Vends Since Last Reset Number of all CASHLESS2_ vends. Resettable.
+N0 01 06
+DB205
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+DB301
+Value Debited From CASHLESS2_ SinceINITIALISATION Value debited from CASHLESS2_. Non-Resettable.
+Nc 01 08
+DB302
+Value Debited From CASHLESS2_ Since ast Reset Value debited from CASHLESS2_. Resettable.
+Nc 01 08
+DB303
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+DB401
+Value Credited To CASHLESS2_ SinceINITIALISATION
+Value credited to CASHLESS2_. Non-Resettable.
+Nc 01 08
+DB402
+Value Credited To CASHLESS2_ Since Last Reset
+Value credited to CASHLESS2_. Resettable.
+Nc 01 08
+DB403
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+DB501
+Value of CASHLESS2_ Discounts Since Last Reset Value of CASHLESS2_ discounts given. (vend price - price paid = discount value). Resettable.
+Nc 01 08
+DB502
+Number Of Discount CASHLESS2_ Vends Since Last Reset Number of  CASHLESS2_ discounted vends given. Resettable.
+N0 01 06
+DB503
+Value Of CASHLESS2_ Discounts SinceINITIALISATION Value of  CASHLESS2_ discounts given. (vend price - price paid = discount value). Non-Resettable.
+Nc 01 08
+DB504
+Number Of Discount CASHLESS2_ Vends SinceINITIALISATION Number of  CASHLESS2_ discounted vends given. Non-Resettable.
+N0 01 08
+DB505
+Value of CASHLESS2_SURCHARGES Since Last Reset Value of CASHLESS2_ surcharges given. (price paid – vend price = surcharge value). Resettable.
+Nc 01 08
+DB506
+Number of Surcharge CASHLESS2_ Vends Since Last Reset Number of CASHLESS2_ surcharge vends given. Resettable.
+N0 01 06
+DB507
+Value Of CASHLESS2_SURCHARGES SinceINITIALISATION Value of CASHLESS2_ surcharges given. (price paid – vend price = surcharge value). Non-Resettable.
+Nc 01 08
+DB508
+Number of Surcharge CASHLESS2_ Vends Number of CASHLESS2_ surcharge vends given. Non-Resettable.
+N0 01 08
+SinceINITIALISATION DB601 Revaluation Incentive on CASHLESS2_ SinceINITIALISATION
+The value of the additional money added to CASHLESS2_ as an incentive. E.g. $10 cash input, $11 credited to card, Incentive is $1 Non-Resettable
+Nc 01 08
+DB602
+Revaluation Incentive on CASHLESS2_ Since Last Reset
+The value of the additional money added to CASHLESS2_ as an incentive. E.g. $10 cash input, $11 credited to card, Incentive is $1 Resettable.
+Nc 01 08
+DB701
+CASHLESS2_ User Group Number
+CASHLESS2_ User group being reported on.
+N0 01 13
+DB702
+CASHLESS2_ User Group Net Sales SINCE_ last reset.
+Net sale (equal to the value deducted from the cards) of the user group in DB701 Resettable.
+Nc 01 08
+DB703
+User Group Value Added To CASHLESS2_ SINCE_ last reset
+Revaluation andINITIALISATION (equal to the value added to the cards) of the user group in DB701 Resettable.
+Nc 01 08
+DB704
+CASHLESS2_ User Group Discounts SINCE_ last reset
+Discount deducted from the standard prices (showing up the net sale prices) of the user group in DB701. Resettable.
+Nc 01 08
+DB705
+Number of products sold to CASHLESS2_ user group SINCE_ initialisation
+This is the number of paid vends from all payment sources of the user group in DB701 since initialisation. Non-resettable.
+N0 01 08
+DB706
+Number of products sold to CASHLESS2_ user group SINCE_ last reset
+This is the number of paid vends from all payment sources of the user group in DB701 since last reset. Resettable.
+N0 01 06
+DB707
+CASHLESS2_ User Group Net Sales SINCE_ initialization
+Net sale (equal to the value deducted from the cards) of the user group in DB701 Non-resettable.
+Nc 01 08
+DB708
+User Group Value Added To CASHLESS2_ SINCE_ initialization
+Revaluation andINITIALISATION (equal to the value added to the cards) of the user group in DB701 Non-resettable.
+Nc 01 08
+DB709
+CASHLESS2_ User Group Discounts SINCE_ initialization
+Discount deducted from the standard prices (showing up the net sale prices) of the user group in DB701. Non-resettable.
+Nc 01 08
+DB801
+CASHLESS2_ Funds Used for Sale
+This field contains the amount of CASHLESS2_ funds used for the last sale. It is an event-driven field and is intended to be sent after every vend which uses CASHLESS2_ funds.
+Nc 01 08
+DB1001
+CASHLESS2_ Number of Mixed Payment Vends Since Initialization
+The number of vends with cashless 2 where the sale is a mixed paid sale (cash and cashless). Non-Resettable.
+N0 01 08
+DB1002
+CASHLESS2_ Value of Mixed Payment CASHLESS Amount Since Initialization
+The value of the cashless amount paid with cashless 2 where the sale is a mixed sale (cash and cashless). Non-Resettable.
+Nc 01 08
+DB1003
+CASHLESS2_ Number of Mixed Payment Vends Since Last Reset
+The number of vends with cashless 2 where the sale is a mixed paid sale (cash and cashless).  Resettable.
+N0 01 06
+DB1004
+CASHLESS2_ Value of Mixed Payment CASHLESS Amount Since Last Reset
+The value of the cashless amount paid with cashless 2 where the sale is a mixed sale (cash and cashless). Resettable.
+Nc 01 08
+CASHLESS1_SERIAL_NUMBER
+Configures field DA101 (not post manufacturer configurable)
+AN 01 20
+DC102
+CASHLESS1_MODEL_NUMBER
+Configures field DA102 (not post manufacturer configurable)
+AN 01 20
+DC103
+CASHLESS1_
+Configures field DA103 (not post manufacturer
+N0 01 04
+SOFTWARE_REVISION configurable)
+DC104
+USER_DEFINED_FIELD
+Configures field DA104
+AN 01 12
+DC105
+CASHLESS1_ASSET_NUMBER
+Configures field DA105
+AN 01 20
+DD101
+CASHLESS2_SERIAL_NUMBER
+Configures field DB101 (not post manufacturer configurable)
+AN 01 20
+DD102
+CASHLESS2_MODEL_NUMBER
+Configures field DB102 (not post manufacturer configurable)
+AN 01 20 DD103
+CASHLESS2_SOFTWARE_REVISION
+Configures field DB103 (not post manufacturer configurable)
+N0 01 04
+DD104
+USER_DEFINED_FIELD
+Configures field DB104
+AN 01 12
+DD105
+CASHLESS2_ASSET_NUMBER
+Configures field DB105
+AN 01 20
+EA101
+Event Identification This field identifies the event being reported in data elements EA102 – EA106.
+AN 01 20
+EA102
+Data of Event Occurance
+Date the event occurred.
+DT 06 08
+EA103
+TIME_ of Event Occurance
+Time the event occurred.
+TM 04 06
+EA104
+Event Duration In Minutes
+How long the event lasted.
+N0 01 08
+EA105
+Event Duration In Milliseconds
+Exactly how long the event lasted.
+N0 01 12
+EA106
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EA201
+Event Identification This field identifies the event being reported in data elements EA202 – EA204
+AN 01 20
+EA202
+Number of Events Since Last Reset Number of times that this event occurred. Resets after each audit data collection.
+N0 01 06
+EA203
+Number of Events SinceINITIALISATION Number of times that this event occurred. Non-Resettable.
+N0 01 06
+EA204
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EA205
+Event Activity Indicates the current event activity.
+N0 01 01
+(1 = Event Active   /    0 (or empty = Event Inactive
+EA206
+Event Duration In Minutes
+Duration of the event (including multiple occurrences) in minutes while the event is in State 2 (see EVENT State paragraph in Section 2).
+N0 01 08
+EA301
+Number Of Reads with RESET SinceINITIALISATION
+The number of times that the audit unit has been interrogated with reset.  This does not include EVENT resets. RESETs can be automatic after a read, via the SD105 RESET command, partial resets via the SD104 selective RESET command, or manual via a machine service mode. Non-Resettable. Supersedes field CA601
+N0 01 08
+EA302
+DATE_Of This Read Out
+Date of this interrogation.
+DT 06 08
+EA303
+TIME_ Of This Read Out
+Time of this interrogation.
+TM 04 06
+EA304
+This Terminal / interrogator Identification
+The Terminals identification data (see ID201).
+AN 01 20
+EA305
+DATE_Of Last Read Out
+Date of the previous interrogation.
+DT 06 08
+EA306
+TIME_ Of Last Read Out
+Time of the previous interrogation.
+TM 04 06
+EA307
+Last Terminal / interrogator Identification
+The identification data of the terminal that performed the previous interrogation (see ID201).
+AN 01 12
+EA308
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EA309
+Number of Reads with or without RESET SINCE_ Initialization The number of times that the audit unit has been interrogated with or without reset.   Non-Resettable.
+N0 01 08
+EA310
+Number of Resets The number of times that the audit unit has been
+N0 01 08
+SINCE_ Initialization reset.  This does not include EVENT resets. RESETs can be automatic after a read, via the SD105 RESET command, partial resets via the SD104 selective RESET command, or manual via a machine service mode. Non-Resettable.
+EA401
+DATE_OF_NITIALISATION
+ Date of initialisation  Note: This may be the date of the first interrogation also.
+DT 06 08
+EA402
+TIME_ OF_NITIALISATION
+Time of initialization Note: This may be the time of the first interrogation also.
+TM 04 06
+EA403
+Initialisation Terminal / Interrogator Identification
+The identification data of the terminal that performs the initialisation. (see ID201). Note: This may be the terminal that performs the first read out
+AN 01 12
+EA404
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EA501
+DATE_of Price Setting
+ Date that the prices were last set.
+DT 06 08
+EA502
+TIME_ of Price Setting
+Time that the prices were last set.
+TM 04 06
+EA503
+Interrogator/ Terminal Identification The identification data of the terminal that set the prices (see ID201).
+AN 01 12
+EA504
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EA505
+Number of Price Alterations This reports the number of changes to prices, incrementing by one for every price alteration SINCE_ the last reset (e.g. up & back = +2 on the total). Resettable
+N0 01 03
+EA601
+DATE_OF_ Machine Service
+ Date of the last time that the machine was serviced. (cleaning, adjustment, repair)
+DT 06 08
+EA602
+TIME_ of Machine
+Time of the last time that the machine was
+TM 04 06
+Service serviced (cleaning, adjustment, repair)
+EA603
+Interrogator/ Terminal Identification The identification data of the terminal that was involved in the servicing. (see ID201).
+AN 01 12
+EA604
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EA701
+Number of Power Outages Since Last Reset Total number of power down - up cycles recorded by the audit unit. Supersedes CA501. Resettable.
+N0 01 06
+EA702
+Number of Power Outages SinceINITIALISATION Total number of power down - up cycles recorded by the audit unit. Supersedes CA502 Non-Resettable.
+N0 01 08
+EA801
+Repeating Event Identification Identifies what repeating event has been set.
+AN 01 20
+EA802
+Day of Repeating Event Occurrence Reports the day that the event will occur. This will be of the form Day of Week, Weekday, Weekend, having values 1-7, 8, 9 respectively. Monday = 1.
+AN 01 02
+EA803
+Hour Of Repeating Event Occurrence Reports the hour that the event will occur, in hours timed from midnight. (24 Hour Clock)
+N0 01 02
+EA804
+Minute of Repeating Event Occurence Reports the start time in minutes from midnight that the event will occur.
+N0 01 04
+EA805
+Millisecond Of Repeating Event Occurrence Reports the start time in milliseconds from midnight that the event will occur.
+N0 01 12
+EA806
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EA901
+Machine Hours SINCE_INITIALISATION Number of machine hours since initiatilization.
+N0 01 06
+EA902
+Total Number of Products Dispensed Since Initiliation Total number of products dispensed since initialization.
+N0 01 08
+EA903
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+EC806
+USER_DEFINED_FIELD
+Configures field EA806
+AN 01 12
+HA101
+HOPPER_SERIAL_NUMBER
+Identification number of the hopper/dispenser mechanism. This number may only be set by the Manufacturer. Typically includes a three character supplier ID code from Appendix B. Programmed at factory, not user changeable. HA1 block is optional. If any HA1 data is transmitted, then HA101 becomes mandatory.
+AN 01 20
+HA102
+HOPPER_ Model
+NumberModel number or description of the hopper/dispenser
+AN 01 20
+HA103
+HOPPER_SOFTWARE_REVISION
+Software revision number of the hopper/dispenser
+N0 01 04
+HA104
+USER_DEFINED_FIELD User defined data
+AN 01 12
+HA105
+HOPPER_ASSET_NUMBER Asset number refence for accounting pruposes. Separate from serial number
+AN 01 20
+HA201
+VALUE_OF_CASH_ In Since Last Reset Value of CASH_ filled in. Includes cash filled in by a mechanism during sales (e. g. coin validator) and cash filled in manually. Resettable
+Nc 01 08
+HA202
+VALUE_OF_CASH_ Filled  Since Last Reset Value of CASH_ manually added to the hopper/dispenser (manually filled and fill mode) Resettable
+Nc 01 08
+HA203
+VALUE_OF_CASH_ In SinceINITIALISATION Value of CASH_ filled in. Includes cash filled in by a mechanism during sales (e. g. coin validator) and cash filled in manually. Non-Resettable
+Nc 01 08
+HA204
+VALUE_OF_CASH_ Filled SinceINITIALISATION Value of CASH_ manually added to the hopper/dispenser (manually filled and fill mode) Non-Resettable
+Nc 01 08
+HA301
+VALUE_OF_CASH_ Dispensed Since Last Reset Value paid out as change plus the value manually dispensed Resettable
+Nc 01 08
+HA302
+VALUE_OF_CASH_ Manuallly Dispensed Since Last Reset Value dispensed manually Resettable
+Nc 01 08
+HA303
+VALUE_OF_CASH_ Dispensed SinceINITIALISATION
+Value paid out as change plus the value manually dispensed Non-Resattable
+Nc 01 08
+HA304
+VALUE_OF_CASH_ Manuallly Dispensed SinceINITIALISATION
+Value dispensed manually Non-Resattable
+Nc 01 08
+HA401
+Value of HOPPER_ Contents
+Value of cash stored in all hopper/dispenser containers of the hopper/dispenser
+Nc 01 08
+HA402
+Block No. 1 = Coin/Bill Type 0 – 7 Block No. 2 =  Coin/Bill Type 8 – 15
+A “1” indicates HA403 to HA410 refers to  coin/bill Type 0 – 7 A “2” indicates HA403 to HA410 refers to  coin/bill Type 8 – 15
+N0 01 01
+HA403
+Coin/Bill Type 0 or 8
+Number of coins/bills in container coin/bill type 0 or 8
+N0 01 03
+HA404
+Coin/Bill Type 1 or 9
+Number of coins/bills in container coin/bill type 1 or 9
+N0 01 03
+HA405
+Coin/Bill Type 2 or 10
+Number of coins/bills in container coin/bill type 2 or 10
+N0 01 03
+HA406
+Coin/Bill Type 3 or 11
+Number of coins/bills in container coin/bill type 3 or 11
+N0 01 03
+HA407
+Coin/Bill Type 4 or 12
+Number of coins/bills in container coin/bill type 4 or 12
+N0 01 03
+HA408
+Coin/Bill Type 5 or 13
+Number of coins/bills in container coin/bill type 5 or 13
+N0 01 03
+HA409
+Coin/Bill Type 6 or 14
+Number of coins/bills in container coin/bill type 6 or 14
+N0 01 03
+HA410
+Coin/Bill Type 7 or 15
+Number of coins/bills in container coin/bill type 7 or 15
+N0 01 03
+HB101
+HOPPER_SERIAL_NUMBER
+Identification number of the hopper/dispenser mechanism. This number may only be set by the Manufacturer. Typically includes a three character
+AN 01 20
+supplier ID code from Appendix B. Programmed at factory, not user changeable. HB1 block is optional. If any HB1 data is transmitted, then HB101 becomes mandatory.
+HB102
+HOPPER_ Model
+NumberModel number or description of the hopper/dispenser
+AN 01 20
+HB103
+HOPPER_SOFTWARE_REVISION
+Software revision number of the hopper/dispenser
+N0 01 04
+HB104
+USER_DEFINED_FIELD User defined data
+AN 01 12
+HB105
+HOPPER_ASSET_NUMBER Asset number refence for accounting pruposes. Separate from serial number
+AN 01 20
+HB201
+VALUE_OF_CASH_ In Since Last Reset Value of cash filled in. Includes cash filled in by a mechanism during sales (e. g. coin validator) and cash filled in manually. Resettable
+Nc 01 08
+HB202
+VALUE_OF_CASH_ Filled  Since Last Reset Value of cash manually added to the hopper/dispenser (manually filled and fill mode) Resettable
+Nc 01 08
+HB203
+VALUE_OF_CASH_ In SinceINITIALISATION Value of cash filled in. Includes cash filled in by a mechanism during sales (e. g. coin validator) and cash filled in manually. Non-Resettable
+Nc 01 08
+HB204
+VALUE_OF_CASH_ Filled SinceINITIALISATION Value of cash manually added to the hopper/dispenser (manually filled and fill mode) Non-Resettable
+Nc 01 08
+HB301
+VALUE_OF_CASH_ Dispensed Since Last Reset Value paid out as change plus the value manually dispensed Resettable
+Nc 01 08
+HB302
+VALUE_OF_CASH_ Manuallly Dispensed Since Last Reset Value dispensed manually Resettable
+HB303
+VALUE_OF_CASH_ Dispensed SinceINITIALISATION Value paid out as change plus the value manually dispensed Non-Resattable
+Nc 01 08
+HB304
+VALUE_OF_CASH_ Manuallly Dispensed SinceINITIALISATION
+Value dispensed manually Non-Resattable
+Nc 01 08
+HB401
+Value of HOPPER_ Contents
+Value of cash stored in all hopper/dispenser containers of the hopper/dispenser
+Nc 01 08
+HB402
+Block No. 1 = Coin/bill Type 0 – 7 Block No. 2 =  Coin/bill Type 8 – 15
+A “1” indicates HB403 to HB410 refers to  Coin/bill Type 0 – 7 A “2” indicates HB403 to HB410 refers to  Coin/bill Type 8 - 15
+N0 01 01
+HB403
+Coin/Bill Type 0 or 8
+Number of coins/bills in container coin/bill type 0 or 8
+N0 01 03
+HB404
+Coin/Bill Type 1 or 9
+Number of coins/bills in container coin/bill type 1 or 9
+N0 01 03
+HB405
+Coin/Bill Type 2 or 10
+Number of coins/bills in container coin/bill type 2 or 10
+N0 01 03
+HB406
+Coin/Bill Type 3 or 11
+Number of coins/bills in container coin/bill type 3 or 11
+N0 01 03
+HB407
+Coin/Bill Type 4 or 12
+Number of coins/bills in container coin/bill type 4 or 12
+N0 01 03
+HB408
+Coin/Bill Type 5 or 13
+Number of coins/bills in container coin/bill type 5 or 13
+N0 01 03
+HB409
+Coin/Bill Type 6 or 14
+Number of coins/bills in container coin/bill type 6 or 14
+N0 01 03
+HB410
+Coin/Bill Type 7 or 15
+Number of coins/bills in container coin/bill type 7 or 15
+N0 01 03
+HC101
+HOPPER_SERIAL_NUMBER
+Configures field HA101 (NOT FIELD CONFIGURABLE)
+AN 01 20
+HC102
+HOPPER_MODEL_NUMBER
+Configures field HA102  (NOT FIELD CONFIGURABLE)
+AN 01 20
+HC103
+HOPPER_
+Configures field HA103  (NOT FIELD
+N0 01 04
+HC104
+User Defined Field
+Configures field HA104
+AN 01 12
+HC105
+HOPPER_ASSET_NUMBER
+Configures field HA105
+AN 01 20
+HD101
+HOPPER_SERIAL_NUMBER
+Configures field HB101 (NOT FIELD CONFIGURABLE)
+AN 01 20
+HD102
+HOPPER_MODEL_NUMBER
+Configures field HB102  (NOT FIELD CONFIGURABLE)
+AN 01 20
+HD103
+HOPPER_SOFTWARE_REVISION
+Configures field HB103  (NOT FIELD CONFIGURABLE)
+N0 01 04
+HD104
+USER_DEFINED_FIELD
+Configures field HB104
+AN 01 12
+HD105
+HOPPER_ASSET_NUMBER
+Configures field HB105
+AN 01 20
+IC101
+Machine _SERIAL_NUMBER
+Configures field ID101 (not post manufacturer configurable)
+AN 01 20
+IC102
+Machine Model
+Configures field ID102 (not post manufacturer
+AN 01 20
+Number configurable)
+IC103
+Machine Build Standard
+Configures field ID103 (not post manufacturer configurable)
+N0 01 04
+IC104
+Machine Location
+Configures field ID104
+AN 01 30
+IC105
+USER_DEFINED_FIELD
+Configures field ID105
+AN 01 12
+IC106
+MACHINE_ASSET_NUMBER
+Configures field ID106
+AN 01 20
+IC201 D
+ata Carrier _SERIAL_NUMBER
+Configures field ID201 (not post manufacturer configurable)
+AN 01 20
+IC202
+Data Carrier _MODEL_NUMBER
+Configures field ID202 (not post manufacturer configurable)
+AN 01 20
+IC203
+Data Carrier _SOFTWARE_REVISION
+Configures field ID203 (not post manufacturer configurable)
+N0 01 04
+IC204
+USER_DEFINED_FIELD
+Configures field ID204
+AN 01 12
+IC205
+Data CarrierASSET_NUMBER
+Configures field ID205
+AN 01 20
+IC301
+Route Number
+Configures field ID301
+AN 01 12
+IC302
+User Function
+Configures field ID302
+AN 01 20
+IC303
+Route Person Name
+Configures field ID303
+AN 01 20
+IC304
+USER_DEFINED_FIELD
+Configures field ID304
+AN 01 12
+IC401
+Decimal Point Position
+Configures field ID401
+N0 01 01
+IC402
+Country Code
+Configures field ID402
+N0 01 03
+IC403
+Currency Description
+Configures field ID403
+AN 01 08
+IC501
+SYSTEM_DATE
+Configures field ID501
+DT 06 08
+IC502
+SYSTEM_TIME
+Configures field ID502
+TM 04 06
+IC503
+SYSTEM_TIME In Seconds
+Configures field ID503
+N0 01 02
+IC504
+SYSTEM_DAYLIGHT_SAVINGS_MODE
+Configures the current status of daylight savings mode.
+AN 02 03
+OFF = Off  (no daylight savings mode) NA = North American rules   EU = European rules   AUS = Australian rules
+IC601
+Current CASH_ Bag Number
+Configures ID601
+AN 01 20
+IC701
+Payment system index
+Configures field ID701 AN 01 6
+IC702
+Payment system Category
+Configures field ID702 AN 01 4
+IC703
+Manufacturer code
+Configures field ID703
+AN 01 20
+IC704
+Serial No.
+Configures field ID704 (not post manufacturer configurable)
+AN 01 20
+IC705
+Model Configures field ID705 (not post manufacturer configurable)
+AN 01 20
+IC706
+Software revision
+(not post manufacturer configurable)
+AN 01 20
+IC707
+Status
+N0 01 10
+IC708
+USER_DEFINED_FIELD
+Configures field ID708
+AN 01 12
+ID101
+Machine _SERIAL_NUMBER Machine identification number. Possibly the ID of the VMD. It should include a three character supplier ID code from Appendix B.
+AN 01 20
+ID102
+Machine _MODEL_NUMBER Machine model number or description.
+AN 01 20
+ID103
+Machine Build Standard This element describes the build standard of the machine. It may be the Audit Unit or Vending Machine Controller software revision number.
+N0 01 04
+ID104
+Machine Location Description of the machine location. May be e.g. “1st floor by the lift”.
+AN 01 30
+ID105
+USER_DEFINED_FIELD The meaning of this field is dependent on the
+AN 01 12
+specific device or category it is associated with. Typically the block type and machine identification will indicate the specific data.
+ID106
+MachineASSET_NUMBER
+Unique number which operator can enter for accounting purposes (see Chapter 5)
+AN 01 20
+ID107
+DTS Level Specifies level number of the DTS Standard e.g. level 6 for DTS version 6.0.
+N0 01 02
+ID108
+DTS Revision Specifies any revision to the main DTS level e.g. revision 1 for potential DTS version 6.1.
+N0 01 04
+ID201
+Data Carrier _SERIAL_NUMBER
+Terminal or data carrier identification number. This is a User defined number.
+AN 01 20
+ID202
+Data Carrier _MODEL_NUMBER
+Terminal or data carrier model number or description.
+AN 01 20
+ID203
+Data Carrier _SOFTWARE_REVISION
+Terminal or data carrier software revision number.
+N0 01 04
+ID204
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+ID205
+Data CarrierASSET_NUMBER Data Carrier Asset Number reference for accounting purposes. This is separate from serial number.
+AN 01 20 ID301
+Route Number Route number or description.
+AN 01 12
+ID302
+User Function Route function being performed. (Audit, Service, Supervisor, etc.)
+AN 01 20
+ID303
+Route Person Name Name of the route person under ID302.
+AN 01 20
+ID304
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+ID401
+Decimal Point Position This field is used in countries whose currency requires a number of digits to the right of the decimal point other than 2.This information is typically reported to the VMC by the peripheral(s).
+N0 01 01
+ID402
+Numeric Currency Code Currency identification by International Telephone Country Code or ISO 4217 numeric currency code. All new designs after July, 2000 must use the ISO 4217 numeric currency codes.
+N0 04 04
+If the left most digit is a 0, the International Telephone Code is used to indicate the currency. For example, the USA code is 0001.
+If the left most digit is a 1, the latest version of the ISO 4217 numeric currency code is used. For example, the code for the US dollar is 1840 and the Euro is 1978.
+ID403
+Alphabetic Currency Code
+This alpha-numeric field is used to define or describe the currency in use. Typically it is the ISO 4217 alphabetic currency code.
+AN 03 03
+ID501
+SYSTEM_DATE Reports the machine Date.
+DT 06 08
+ID502
+SYSTEM_TIME_ Reports the machine Time.
+TM 04 06
+ID503
+SYSTEM_TIME - Seconds Reports the machine Time Seconds if ID502 is reported in the Hour Minute (HHMM) order. Used to report seconds to the interrogating device. Note that the interrogating device may use IC503 to update the time and thus keep the system synchronised.
+N0 01 02
+ID504
+SYSTEM_DAYLIGHT_SAVINGS_MODE
+Reports the current status of daylight savings mode.
+OFF = Off  (no daylight savings mode) NA = North American rules   EU = European rules   AUS = Australian rules
+AN 02 03
+ID601
+CASH_ Bag Number This is the identification of the cash bag or box containing the money removed from the machine
+AN 01 20
+by the route person or service engineer.
+ID701
+Payment system index
+Defines the number of the payment system (beginning with 1) for which the following values are valid. Several payment systems are possible.
+AN 01 06
+ID702
+Payment system Category
+Defines the category of payment systems: 0: Coin mech., 1: Coin changer, 2: Token acceptor, 10: Magnetic card system, 11: Chipcard system, 12: Contactless card system, 20: Contact Key system, 21: Contactless Key system, 30: Bill Validator.
+AN 01 04
+ID703
+Manufacturer code Manufacturer code of the payment system.
+AN 01 20
+ID704
+Serial No. Serial number of the payment system
+AN 01 20
+ID705
+Model Modelnumber of the payment system
+AN 01 20
+ID706
+Software revision Software revision of the payment system
+AN 01 20
+ID707
+Status Status of payment system: (the right most bit will be sent first) 1. digit: 0 = disabled 1 = enabled 2. digit: revalue enabled 3. digit: Singlevend/Multivend
+N0 01 10
+ID708
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+LA101
+Pricelist Number Defines the list number for which the following values are valid. Several Lists possible, to set different prices for each product.
+N0 01 01
+LA102
+Product Number Equal to the product no. defined in PA101
+AN 01 06
+LA103
+Price Product price valid for this list number. (If no price is defined for a product number, the price defined in PA102 is to be used).
+Nc 01 08
+LA104
+Number of Vends Since Last Reset Number of vends of the product on this price list. Resettable.
+N0 01 06
+LA105
+Number Of Vends SinceINITIALISATION Number of vends of the product on this price list. Non-Resettable
+N0 01 08
+LC101
+Pricelist Number
+Configures field LA101
+N0 01 01
+LC102
+Product Number
+Configures field LA102
+AN 01 06
+LC103
+Price
+Configures field LA103
+Nc 01 08
+MA101
+Machine _SERIAL_NUMBER Serial number of the machine reporting status and configuration data.
+AN 01 20
+MA102
+Single Vend / Multi-vend Status of single vs. multi vend.
+AN 01 20
+MA201
+Machine _SERIAL_NUMBER Serial number of the machine reporting status and configuration data.
+AN 01 20
+MA202
+VMC Identity / _SERIAL_NUMBER Serial number of the vending machine controller reporting status and configuration data
+AN 01 20
+MA301
+Machine _SERIAL_NUMBER Serial number of the machine reporting status and configuration data.
+AN 01 20
+MA302
+COIN_MECH_ Identity Serial number of the coin mechanism reporting status and configuration data.
+AN 01 20
+MA401
+Machine _SERIAL_NUMBER Serial number of the machine reporting status and configuration data.
+AN 01 20
+MA402
+Debit Card Identity / _SERIAL_NUMBER Serial number of the debit card system reporting status and configuration data.
+MA403
+Pricelist Number Identifies the price list whose card discount is reported.
+N0 01 01
+MA404
+Card Discount The discount in percent of the standard price.
+N0 01 02
+MA405
+CARD_SURCHARGE
+Surcharge in %
+N0 01 02
+MA501
+BLOCK_IDENTIFIER
+Sequential block number used for stringing multiple MA5 blocks together. This field should read LAST on the last block in the sequence. MA5 blocks are used together with MA2, MA3 and MA4.
+AN 01 12
+MA502
+SPECIFIC_CONFIGURATION_DATA
+This block contains the specific data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 100
+MA503
+OPTIONAL_FIELD_2
+This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA504
+OPTIONAL_FIELD_3
+This block contains additional configuration data
+AN 01 12
+coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+MA505
+OPTIONAL_FIELD_4This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA506
+OPTIONAL_FIELD_5
+This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA507
+OPTIONAL_FIELD_6
+This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA508
+OPTIONAL_FIELD_7
+This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA509
+OPTIONAL_FIELD_8
+This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA510
+OPTIONAL_FIELD_9
+This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA511
+OPTIONAL_FIELD_10 This block contains additional configuration data coming from the device addressed by the preceding MA2 or MA3 or MA4 block.
+AN 01 12
+MA601
+Product Identifier
+AN 01 06
+MA602
+Water Quantity
+N0 01 06
+MA603
+Water Quantity Cold
+MA604
+Water Quantity
+N0 01 06
+MA605
+Water Quantity Short
+N0 01 06
+MA606
+Water Quantity Cleaning Procedure
+N0 01 06
+MA607
+Product Quantity
+N0 01 06
+MA608
+Starttime Product
+N0 01 06
+MA701 Product Number
+AN 01 06
+Syrup Quantity Small
+N0 01 06
+Syrup Quantity Big
+N0 01 06
+MA704
+Sodawater Quantity Small
+N0 01 06
+MA705
+Sodawater Quantity Big
+N0 01 06
+MA706
+Water Quantity
+N0 01 06
+MA707
+Starttime Product
+N0 01 06
+MA801
+Shelf Number
+AN 01 06
+MA802
+Shelf Lock Status
+N0 01 06
+MA803
+Deposit
+N0 01 06
+MA901
+Shelf Number
+AN 01 06
+MA902
+Shelf Status
+N0 01 06
+MC101
+Machine _SERIAL_NUMBER Configures field
+AN 01 20
+MC102
+Single Vend / Multi-vend Configures field
+AN 01 20
+MC201
+Machine _SERIAL_NUMBER Configures field
+AN 01 20
+MC202
+VMC Identity / _SERIAL_NUMBER
+Configures field MA202
+AN 01 20
+MC301
+Machine _SERIAL_NUMBER
+Configures field MA301
+AN 01 20
+MC302
+COIN_MECH_ Identity / _SERIAL_NUMBER
+Configures field MA302
+AN 01 20
+MC401
+Machine _SERIAL_NUMBER
+Configures field MA401
+AN 01 20
+MC402
+Debit Card Identity / _SERIAL_NUMBER
+Configures field MA402
+AN 01 20
+MC403
+Pricelist Number
+Configures field MA403
+N0 01 01
+MC404
+Card Discount
+Configures field MA404
+N0 01 02
+MC405
+Card Surcharge Surcharge in %
+N0 01 02
+MC501
+Block Identifier
+Configures field MA501
+AN 01 12
+MC502
+Specific Configuration Data
+Configures field MA502
+AN 01 100
+MC503
+OPTIONAL_FIELD_2
+Configures field MA503
+AN 01 12
+MC504
+OPTIONAL_FIELD_3
+Configures field MA504
+AN 01 12
+MC505
+OPTIONAL_FIELD_4
+Configures field MA505
+AN 01 12
+MC506
+OPTIONAL_FIELD_5
+Configures field MA506
+AN 01 12
+MC507
+OPTIONAL_FIELD_6
+Configures field MA507
+AN 01 12
+MC508
+OPTIONAL_FIELD_7
+Configures field MA508
+AN 01 12
+MC509
+OPTIONAL_FIELD_8
+Configures field MA509
+AN 01 12
+MC510
+OPTIONAL_FIELD_9
+Configures field MA510
+AN 01 12
+MC511
+OPTIONAL_FIELD_10
+Configures field MA511
+AN 01 12
+Product Identifier
+Configures field MA601
+AN 01 06
+MC602
+Water Quantity
+Configures field MA602
+N0 01 06
+Water Quantity Cold
+Configures field MA603
+N0 01 06
+MC604
+Water Quantity
+Configures field MA604
+N0 01 06
+MC605
+Water Quantity Short
+Configures field MA605
+N0 01 06
+MC606
+Water Quantity Cleaning Procedure
+Configures field MA606
+N0 01 06
+MC607
+Product Quantity
+Configures field MA607
+N0 01 06
+MC608
+Starttime Product
+Configures field MA608
+N0 01 06
+MC701
+Product Identifier
+Configures field MA701
+AN 01 06
+MC702
+Syrup Quantity Small
+Configures field MA702
+N0 01 06
+MC703
+Syrup Quantoty Big
+Configures field MA703
+N0 01 06
+MC704
+Sodawater Quantity Small
+Configures field MA704
+N0 01 06
+MC705
+Sodawater Quantity Big
+Configures field MA705
+N0 01 06
+MC706
+Water Quantity
+Configures field MA706
+N0 01 06
+MC707
+Starttime Product
+Configures field MA707
+N0 01 06
+MC801
+Shelf Identifier
+Configures field MA801
+AN 01 06
+MC802
+Shelf Lock Status
+Configures field MA802
+N0 01 06
+MC803
+Deposit
+Configures field MA803
+N0 01 06
+MC901
+Shelf Identifier
+Configures field MA901
+AN 01 06
+MC902
+Shelf Status
+Configures field MA902
+N0 01 06
+MR101
+Meter Read Number Of Vends SinceINITIALISATION This value is the meter reading of the total number of vends by the machine, including paid, free and test vends. It is recorded by the route person using a Data Carrier. Non Resettable
+N0 01 08
+MR102
+Meter Read Number Of All Paid Vends SinceINITIALISATION This value is the meter reading of the total number of paid vends by the machine. It is recorded by the route person using a Data Carrier. Non Resettable
+N0 01 08
+MR103
+Meter Read Number Of Free Vends SinceINITIALISATION This value is the meter reading of the total number of free vends by the machine. It is recorded by the route person using a Data Carrier. Non Resettable
+N0 01 08
+MR104
+Meter Read Number Of Test Vends Since Last Reset This value is the meter reading of the total number of test vends by the machine since the last reset. It is recorded by the route person using a Data Carrier. Resettable.
+N0 01 08
+MR105
+Meter Read Number Of Test Vends SinceINITIALISATION This value is the meter reading of the total number of test vends by the machine. It is recorded by the route person using a Data Carrier. Non Resettable
+N0 01 08
+MR201
+Metered Product Identifier This value is the product / column number of the meter recording individual product sales. It is recorded by the route person using a Data Carrier.
+AN 01 06
+MR202
+Meter Read Number Of Vends For One Product SinceINITIALISATION
+This value is the number of vends for a single product whose number is given by MR201. It is recorded by the route person using a Data Carrier. Non Resettable.
+N0 01 08
+PA101
+Product Identifier Identifies product to be audited by PA102-PA503. The product (i.e. selection) number should refer to a price line number or machine column designator. This number is defined by the manufacturer.
+AN 01 06
+PA102
+Product Price The normal vend price of the product.
+Nc 01 08
+PA103
+Product Identification Product identification should identify the product itself, as in a name (chips / crisps) or an ID number (barcode).
+AN 01 20
+PA104
+Maximum Product Capacity Largest quantity of this type of product that can be stocked in the machine.
+N0 01 04
+PA105
+Standard Filling Level Normal filling level of this type of product.
+N0 01 04
+PA106
+Standard Dispensed Quantity The standard dispensed quantity for each Vend of this product
+N0 01 04
+PA107
+Selection Status Indicates if the selection motor, actuator, or mechanism is present or if historical (since initialization) data is available.      0 or empty (recommended) = Selection Present  (normal)     1 = Selection is not Present   (missing / not plugged in) This element is not intended to indicate that a product is unavailable for vending, i.e. Soldout.
+N0 01 01
+PA108
+Current Product Level Holds the current product filling level and is modified after each product vend and after each refill action
+N0 01 04
+PA109
+Minimum Product  Level Holds the minimum product level that triggers the refill process
+N0 01 04
+PA201
+Number of Products Vended SinceINITIALISATION
+The number of products of this type (PA1) vended where the sale is a paid sale. Does not include free vends and test vends. Includes coin, bill, card, discount, free vend token, and zero price vends. Non-Resettable.
+N0 01 08
+PA202
+Value Of Paid ProductSALES_SINCE_INITIALISATION
+The value of the products of this type (PA1) vended where the sale is a paid sale. Does not include free vends and test vends. Includes coin, bill, card, discount, free vend token, and zero price vends. Non-Resettable.
+Nc 01 08
+PA203
+Num. Of Products Vended Since Last Reset
+The number of products of this type (PA1) vended where the sale is a paid sale. Does not include free vends and test vends. Includes coin, bill, card, discount, free vend token, and zero price vends. Resettable
+N0 01 06
+PA204
+Value Of Paid ProductSALES_SINCE_ Last Reset
+The value of the products of this type (PA1) vended where the sale is a paid sale. Does not include free vends and test vends. Includes coin, bill, card, discount, free vend token, and zero price vends. Resettable.
+Nc 01 08
+PA205
+Number of Discounted Paid Vends SinceINITIALISATION
+This is the number of discounted paid vending sales from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Non-Resettable.
+N0 01 08
+PA206
+Value of Discounts given SinceINITIALISATION
+This is the value of discounts from all payment sources since initialisation. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Non-Resettable.
+Nc 01 08
+PA207
+Number of This is the number of discounted paid vending
+N0 01 08
+Discounted Paid Vends Since Last Reset
+sales from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends.  Resettable.
+PA208
+Value of Discounts Given Since Last Reset
+This is the value of discounts from all payment sources.  Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends.  Resettable.
+Nc 01 08
+PA209
+Number OF_URCHARGES Paid Vends SinceINITIALISATION
+This is the number of surcharged vends from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Non-Resettable.
+N0 01 08
+PA210
+Value OF_URCHARGES Paid SinceINITIALISATION
+This is the value of surcharges collected from all payment sources since initialisation. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Non-Resettable.
+Nc 01 08
+PA211
+Number of Surcharged Paid Since Last Reset
+This is the number of surcharged vends from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Resettable.
+N0 01 06
+PA212
+Value OF_URCHARGES Paid Since Last Reset
+This is the value of surcharges collected from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Resettable.
+Nc 01 08
+PA301
+Number Of Test Vends SinceINITIALISATION
+The number of test vends of this product (PA1) performed. Non-Resettable.
+N0 01 08
+PA302
+Value Of Test Vends SinceINITIALISATION
+The value of the test vends of this product (PA1) performed. Non-Resettable.
+Nc 01 08
+PA303
+Number Of Test Vends Since Last Reset
+The number of test vends of this product (PA1) performed. Resettable
+N0 01 06
+PA304
+Value Of Test Vends Since Last Reset
+The value of the test vends of this product (PA1) performed. Resettable
+Nc 01 08
+PA401
+Number Of Free Vends SinceINITIALISATION
+The number of free vends of this product (PA1) performed. Non-Resettable.
+N0 01 08
+PA402
+Value Of Free Vends SinceINITIALISATION
+The value of the free vends of this product (PA1) performed. Non-Resettable.
+Nc 01 08
+PA403
+Number Of Free Vends Since Last Reset
+The number of free vends of this product (PA1) performed. Resettable
+N0 01 06
+PA404
+Value Of Free Vends Since Last Reset
+The value of the free vends of this product (PA1) performed. Resettable
+Nc 01 08
+PA405
+Number of Free Vends without Cups Since Initialization
+The number of products of this type (PA1) vended where the sale is a free vend and no cup has been dispensed from the Vending machine (the patron has used own cup). Does not include test vends and zero price vends. Non-Resettable.
+N0 01 08
+Number of Free Vends without Cups Since Last Reset
+The number of products of this type (PA1) vended where the sale is a free vend and no cup has been dispensed from the Vending machine (the patron has used own cup). Does not include test vends and zero price vends. Resettable.
+N0 01 08
+PA501
+Sold OutDATE The date that this product (PA1) sold out. In some implementations this may be the date of most recent sale.
+DT 06 08
+PA502
+Sold OutTIME The time that this product (PA1) sold out. In some
+TM 04 06
+implementations this may be the time of most recent sale.
+PA503
+NUMBER_OF_TIMES_SOLD_OUT_PRODUCT_SELECTED
+The number of times a product selection is made when sold out. (Credit is available but not deducted). One count per transaction. Resettable
+N0 01 04
+PA601
+PRODUCT_IDENTIFIER
+Identifies product to be audited by PA602-PA606. The product (i.e. selection) number should refer to a price line number or machine column designator. This number is defined by the manufacturer.
+AN 01 06
+PA602
+Product Text The product (i.e. selection) text should refer to a price line number or machine column designator.
+AN 01 20
+PA603
+VAT_GROUP
+Vat group number. 1 out of 4 VAT groups can be selected per price line number or machine column designator.
+N0 01 01
+PA604
+Product Status Product sales status (price line number or machine column designator). Status=0 means that the sale of the product is blocked. Status=1 means that the product may be sold in a certain period. Status=2 means that the product may be sold any time.
+N0 01 01
+PA605
+Free Vend The product can be set to free vend (price line number or machine column designator). Free vend=0 means that the product is not set to free vend. Free vend=1 means that the product is delivered free of charge if a payment card is used. Free vend=2 means that the product is delivered free of charge.
+N0 01 01
+PA606
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+PA701
+Product Number Identifies product to be audited by PA702-PA708.
+AN 01 08
+The product (i.e. selection) number should refer to a price line number or machine column designator. This number is defined by the manufacturer.
+PA702
+Payment device Identifies the payment device that performed vends reported in PA703 – PA708. CA = cash (coin and bill) DA = cashless 1 DB = cashless 2 …
+AN 01 02
+PA703
+Price list number Defines the vending machine list number for which the following values are valid. Irrelevant for cash sales, test and free vend. See appl. notes.
+N0 01 03
+PA704
+Applied Price Specifies the product price for a sale with the parameters PA701 to PA703
+Nc 01 08
+PA705
+Number of sales Since Initialization
+The number of products of this type (PA701) vended where the sale is a paid sale. Does not include free vends and test vends. Includes coin, bill, card, discount, surcharge, free vend token, and zero price vends. Non-Resettable.
+N0 01 08
+PA706
+Value OF_ALES_SINCE_ Initialization
+The value of the products of this type (PA701) where the sale is a paid sale. Does not include free vends and test vends. Includes coin, bill, card, discount, surcharge, free vend token, and zero price vends. Non-Resettable.
+Nc 01 08
+PA707
+Number of sales Since Last Reset
+The number of products of this type (PA701) vended where the sale is a paid sale. Does not include free vends and test vends. Includes coin, bill, card, discount, surcharge, free vend token, and zero price vends.  Resettable.
+N0 01 06
+PA708
+Value OF_ALES_SINCE_ Last Reset
+The value of the products of this type (PA701) where the sale is a paid sale. Does not include free
+Nc 01 08
+vends and test vends. Includes coin, bill, card, discount, surcharge, free vend token, and zero price vends. Resettable.
+PA801
+Number of Mixed Payment Vends Since Initialization
+The number of products of this type (PA101) vended where the sale is a mixed paid sale (cash and cashless). Non-Resettable.
+N0 01 08
+PA802
+Value of Mixed Payment CASH_ Amount Since Initialization
+The value of the cash amount paid for products of this type (PA101) where the sale is a mixed sale (cash and cashless). Non-Resettable.
+Nc 01 08
+PA803
+Number of Mixed Payment Vends Since Last Reset
+The number of products of this type (PA101) vended where the sale is a mixed paid sale (cash and cashless).  Resettable.
+N0 01 08
+PA804
+Value of Mixed Payment CASH_ Amount Since Last Reset
+The value of the cash amount paid for products of this type (PA101) where the sale is a mixed sale (cash and cashless). Resettable.
+Nc 01 08
+PC101
+Product Number Identifies product to be configured by PC102 - PC106
+AN 01 06
+PC102
+Product Price
+Configures field PA102
+Nc 01 08
+PC103
+Product Identification
+Configures field PA103
+AN 01 20
+PC104
+Maximum Product Capacity
+Configures field PA104
+N0 01 04
+PC105
+Standard Filling Level
+Configures field PA105
+N0 01 04
+PC106
+Standard Dispensed Quantity
+Configures field PA106
+N0 01 04
+Current Product Level Configures PA108 after each refill action
+N0 01 04
+PC109
+Minimum Product Level
+Configures PA109
+N0 01 04
+PC601
+Product Identifier Identifies product to be configured by PC602 - PC606
+AN 01 06
+PC602
+Product Text
+Configures field PA602
+AN 01 20
+PC603
+VAT Group
+Configures field PA603
+N0 01 01
+PC604
+Product Status
+Configures field PA604
+N0 01 01
+PC605
+Free Vend
+Configures field PA605
+N0 01 01
+PC606
+USER_DEFINED_FIELD
+Configures field PA606
+AN 01 12
+PC701
+Product Number Identifies product sales parameters to be configured by PC702 – PC704
+AN 01 08
+PC702
+Payment device Identifies payment device further specified in PC703 – PC704. CA = cash (coin and bill) DA = cashless 1 DB = cashless 2 …
+AN 01 02
+PC703
+Price list number Identifies the vending machine price list to be configured in PC704
+N0 01 03
+PC704
+Applied Price Configures PA704
+Nc 01 08
+PP101
+Preselection Number Identifies the preselection to be audited by PP102PP108. This number is defined by the manufacturer.
+AN 01 06
+PP102
+Preselection Price The normal price of the preselection.
+Nc 01 08
+PP103
+Preselection Identification Preselection identification should identify the preselection itself, as in a name (sweetner, whitener, etc.) or an ID number (barcode).
+AN 01 20
+PP104
+Preselection Incremental Price The incremental price for multiple preselections of this type in the same transaction.
+Nc 01 06
+PP105
+NUMBER_OF_TIMES_PRESELECTION_USED SinceINITIALISATION
+The number of times this preselection has been used since initialisation.
+N0 01 06
+PP106
+Value of Preselection Used The value of this preselection that has been used since initialisation.
+Nc 01 08
+SinceINITIALISATION
+PP107
+Number ofTIMES Preselection Used Since Reset
+The number of times this preselection has been used since the last reset.
+N0 01 06
+PP108
+Value of Preselection Used Since Reset
+The value of this preselection that has been used since the last reset.
+Nc 01 08
+Stock Item Identification
+Stock item identification should identify the product it- self, as in a name (chips / crisps) or an ID number (barcode).
+AN 01 20
+SA102
+Quantity Added To The Machine
+This is the quantity of product stocked or added to the machine inventory.
+N0 01 06
+SA103
+Quantity Removed From The Machine
+This is the quantity of product manually removed from the machine inventory.
+N0 01 06
+SA104
+Stock Item Machine Price
+This is the normal vend price that this item is vended at. (e.g. Price manually entered in Data Carrier)
+Nc 01 08
+SA105
+Stock Item Machine Location
+This should identify the column number of where this item is vended from. (e.g. location manually entered in Data Carrier)
+AN 01 20
+SA106
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+SA201
+Ingredient Number Defines the ingredient for which the following values are valid.
+AN 01 20
+SA202
+Quality of Ingredient Vended Since Last Reset Quantity of ingredient vended since last reset.
+N0 01 06
+SA203
+Quantity of Ingredients Vended SinceINITIALISATION Quantity of ingredient vended since initialisation.
+N0 01 06
+Current Password This element transmits the security access key currently in use.
+AN 01 12
+SD102
+New Password This element transmits the new security access key that will be adopted at the end of the session.
+AN 01 12
+SD103
+Reporting Instructions
+This command is used to instruct the audit unit which data segments (not individual data elements) are to be reported.  Refer to Section 2 for specific details on the use of the SD103 command.
+CD 01 100
+SD104
+Reset Selected Data
+This command is used to instruct the audit unit to reset selected data segments (not individual data elements).  Refer to Section 2 for specific details on the use of the SD104 command.
+CD 01 100
+SD105
+Reset All Interval Data Control
+This command is used to place the audit unit into a mode of operation pertaining to resetting interval audit data.  It also is used to instruct the audit unit when to reset interval (since last reset) data elements. AUTO, SAVE, and RESET are the allowable commands.  Refer to Section 2 for specific details on the use of the SD105 command.
+CD 04 05
+SD106
+Reset Event(s) Control
+This command is used to place the audit unit into a mode of operation pertaining to resetting State 3 events.  It also is used to instruct the audit unit when to reset State 3 events. AUTO, SAVE, and RESET are the allowable commands.  Refer to Section 2 for specific details on the use of the SD106 command.
+CD 04 05
+TA101
+Token Acceptor _SERIAL_NUMBER
+Identification number of the token acceptor unit. This number may only be set by the Manufacturer. Note: If payment system accepts coins as well as tokens, use CA101 element instead of TA101
+AN 01 20
+Token Acceptor _MODEL_NUMBER
+Model number or description of the token unit.
+AN 01 20
+TA103
+Token Acceptor _SOFTWARE_REVISION
+Software revision number of the token unit.
+N0 01 04
+TA104
+USER_DEFINED_FIELD User Defined Data
+AN 01 12
+TA201
+Value of Vend Token Vends SinceINITIALISATION Value of all vend token vends. Non-Resettable.
+Nc 01 08
+TA202
+No. of Vend Token Vends SinceINITIALISATION
+Number of all vend token vends Non-Resettable.
+N0 01 08
+TA203
+Value of Vend TokenSALES_SINCE_ Last Reset
+Value of all vend token sales. Resettable.
+Nc 01 06
+TA204
+No. of Vend TokenSALES_SINCE_ Last Reset
+Number of all vend token sales. Resettable.
+N0 01 06
+TA205
+Value of Value Token SinceINITIALISATION
+Value of all value token sales. Non-Resettable.
+Nc 01 08
+TA206
+No. of  Value Token SinceINITIALISATION
+Number  of all value token sales. Non-Resettable.
+N0 01 08
+Value of Value TokenSALES_SINCE_ Last Reset
+Value of all value token sales. Resettable.
+Nc 01 06
+TA208
+No. of Value Token Vends Since Last Reset
+Number of all value token sales. Resettable.
+N0 01 06
+TA301
+Value of Value Tokens In Since Last Reset
+Value of all value tokens accepted. Resettable.
+Nc 01 08
+TA302
+Value of Value Tokens In SinceINITIALISATION
+Value of all value tokens. Non-Resettable.
+Nc 01 08
+TA401
+Value of Value Tokens Dispensed Since Last Reset
+Value of all value tokens dispensed as change plus manually dispensed. Resettable.
+Nc 01 08
+TA402
+Value of Value Tokens Manually Dispensed Since Last Reset
+Value of all value tokens manually dispensed. Resettable.
+Nc 01 08
+TA403
+Value of Value Tokens Dispensed SinceINITIALISATION
+Value of all value tokens dispensed as change plus manually dispensed. Non-Resettable.
+Nc 01 08
+TA404
+Value of Value Tokens Manually Dispensed SinceINITIALISATION
+Value of all value tokens manually dispensed. Non-Resettable.
+Nc 01 08
+TA405
+Number of Vend Tokens Dispensed Since Last Reset
+Number of all vend tokens dispensed as change plus manually dispensed. Resettable.
+N0 01 06
+TA406
+Number of Vend Tokens Manually Dispensed Since Last Reset
+Number of all vend tokens manually dispensed. Resettable.
+N0 01 08
+TA407
+Number of  Vend Tokens Dispensed SinceINITIALISATION
+Number of all vend tokens dispensed as change plus manually dispensed. Non-Resettable.
+N0 01 08
+TA408
+Number of  Vend Tokens Manually Dispensed SinceINITIALISATION
+Number of all vend tokens manually dispensed Non-Resettable.
+N0 01 08
+TA501
+Value of Token Overpay Since Last Reset
+Value of value token overpay received. (Inserted money - change paid - vend price = overpay value). Resettable.
+Nc 01 08
+TA502
+Value of Token Overpay SinceINITIALISATION
+Value of value token overpay received. (Inserted money - change paid - vend price = overpay value). Non-Resettable.
+Nc 01 08
+TA601
+Value of Value Tokens Filled Since Last Reset
+Value of all value tokens manually added to the machine. (filled inventory tubes). Resettable.
+Nc 01 08
+TA602
+Value of Value Value of all value tokens manually added to the
+Nc 01 08
+Tokens Filled Since Initiatlisation
+machine. (filled inventory tubes). Non-Resettable.
+TA603
+Number of Vend Tokens Filled Since Last Reset
+Number of all vend tokens manually added to the machine. (filled inventory tubes). Resettable.
+N0 01 06
+TA604
+Number of Vend Tokens Filled SinceINITIALISATION
+Number of all vend tokens manually added to the machine. (filled inventory tubes). Non-Resettable.
+N0 01 08
+TA701
+Token Value Value of the token being reported on. Value of zero means vend token.
+Nc 01 08
+TA702
+Number of Tokens In Since Last Reset
+Number of value token of this value (TA701) accepted. Resettable.
+N0 01 06
+TA703
+No. of Tokens To CASH_ Box Since Last Reset
+Number of value token of this value (TA701) accepted and sent to the cashbox. Resettable.
+N0 01 06
+TA704
+No. of Tokens To Tubes Since Last Reset
+Number of value token of this value (TA701) accepted and sent to the inventory tubes Resettable.
+N0 01 06
+TA705
+No. of Tokens In SinceINITIALISATION
+Number of value tokens of this value (TA701) accepted. Non-Resettable.
+N0 01 08
+TA706
+No. of Tokens To CASH_ Box SinceINITIALISATION
+Number of value tokens of this value (TA701) accepted and sent to the cashbox. Non-Resettable.
+N0 01 08
+TA707
+No. of Tokens To Tubes SinceINITIALISATION
+Number of value tokens of this value (TA701) accepted and sent to the inventory tubes Non-Resettable.
+N0 01 08
+Token Value Value of the token being reported on. Value of zero means vend token.
+Nc 01 08
+No. of Tokens Dispensed Since Last Reset
+Number of value tokens of this value (TA801) paid out as change plus manually dispensed. Resettable.
+N0 01 06
+TA803
+No. of Tokens Manually Dispensed Since Last Reset
+Number of value tokens of this value (TA801) manually dispensed. Resettable.
+N0 01 06
+TA804
+No. of Tokens Dispensed SinceINITIALISATION
+Number of value tokens of this value (TA801) paid out as change plus manually dispensed. Non-Resettable.
+N0 01 08
+TA805 No. of Tokens Manually Dispensed SinceINITIALISATION
+Number of value tokens of this value (TA801) manually dispensed. Non-Resettable.
+N0 01 08
+TA901
+Token Value Value of the token being reported on. Value of zero means vend token.
+Nc 01 08
+Number of Tokens Filled Since Last Reset
+Number of value tokens of this value (TA901) manually filled. Resettable.
+N0 01 06
+TA903
+Number of Tokens Filled SinceINITIALISATION
+Number of value tokens of this value (TA901) manually filled. Non-Resettable.
+N0 01 08
+TA1001 Token Identification
+Identification Number of the Token being reported on.
+N0 01 08
+Token Value Value of the token. Note that a value of zero means that the token is a vend token.
+Nc 01 08
+TC101
+Token Acceptor _SERIAL_NUMBER
+Configures field TA101 (not post manufacturer configurable)
+AN 01 20
+TC102
+Token Acceptor _MODEL_NUMBER
+Configures field TA102 (not post manufacturer configurable)
+AN 01 20
+TC103
+Token Acceptor _SOFTWARE_REVISION
+Configures field TA103 (not post manufacturer configurable)
+N0 01 04
+TC104
+USER_DEFINED_FIELD
+Configures field TA104
+AN 01 12
+TC1001
+Token Identification
+Configures field TC1001
+N0 01 08
+TC1002
+Token Value
+Configures field TA1002
+Nc 01 08
+VA101
+Value of All Paid Vends SinceINITIALISATION This is the value of all paid vending sales from all payment sources since initialisation. NonResettable. Free vends and Test vends are not included. Includes coin, bill, card, discount, free vend token, and zero price vends.
+Nc 01 08
+VA102
+Number of All Paid Vends Since Initiatlisation This is the number of paid vending sales from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, discount, free vend token, and zero price vends. Non-Resettable.
+N0 01 08
+VA103
+Value of All PaidSALES_SINCE_ Last Reset This is the value of all paid vending sales from all payment sources. Free vends and test vends are not included. Includes coin, bill, card, discount, free vend token, and zero price vends. Resettable.
+Nc 01 08
+VA104
+Number of All Paid Vends Since Last Reset This is the number of all paid vending sales from all payment sources. Free vends and test vends are not included. Includes coin, bill, card, discount, free vend token, and zero price vends.  Resettable.
+N0 01 06
+VA105
+Value of All Discounts Given SinceINITIALISATION This is the value of all discounts awarded by the vending machine controller (does not include discounts applied by a peripheral) from all payment sources since initialisation. Free vends and test vends are not included. Includes coin, bill, card, free vend token, and zero price vends. Non-Resettable.
+Nc 01 08
+VA106
+Number of All Discounted Paid Vends SinceINITIALISATION This is the number of all discounted paid vending sales awarded by the vending machine controller (does not include discounts applied by a peripheral) from all payment sources. Does not include free vends and test vends. Includes coin,
+N0 01 08
+bill, card, free vend token, and zero price vends. Non-Resettable.
+VA107
+Value of All Discounts Given Since Last Reset
+This is the value of all discounts awarded by the vending machine controller (does not include discounts applied by a peripheral) from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Resettable.
+Nc 01 08
+VA108
+Number of All Discounted Paid Vends Since Last Reset
+This is the number of all discounted paid vending sales awarded by the vending machine controller (does not include discounts applied by a peripheral) from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Resettable.
+N0 01 08
+VA109
+Number of All Surcharged Vends Since Initiatlization
+This is the number of all surcharged vends from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Non-Resettable.
+N0 01 08
+VA110
+Value of AllSURCHARGES Collected Since Initialization
+This is the value of all surcharges collected from all payment sources since initialisation. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Non-Resettable.
+Nc 01 08
+VA111
+Number of All Surcharged Vends Since Last Reset
+This is the number of all surcharged vends from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends. Resettable.
+N0 01 06
+VA112
+Value of AllSURCHARGES Collected Since Last Reset
+This is the value of all surcharges collected from all payment sources. Does not include free vends and test vends. Includes coin, bill, card, free vend token, and zero price vends.
+Nc 01 08
+Resettable.
+VA201
+Test Vend Value OfSALES_SINCE_INITIALISATION
+Value of all test vends performed. Non-Resettable.
+Nc 01 08
+VA202
+Number of Test Vends SinceINITIALISATION
+Number of all test vends performed. Non-Resettable.
+N0 01 08
+VA203
+Test Vend Value OfSALES_SINCE_ Last Reset
+Value of all test vends performed. Resettable.
+Nc 01 06
+VA204
+Number of Test Vends Since Last Reset
+Number of all test vends performed. Resettable.
+N0 01 04
+VA205
+Test Vend Box CASH_ SinceINITIALISATION
+Value of money to the cash box during test vends. Non-Resettable.
+Nc 01 08
+VA206
+Test Vend Box CASH_ Since Last Reset
+Value of money to the cash box during test vends. Resettable.
+Nc 01 08
+VA301
+Free Vend Value OF_ALES_SINCE_INITIALISATION
+Value of all free vends performed. Non-Resettable.
+Nc 01 08
+VA302
+Number of Free Vends SinceINITIALISATION
+Number of all free vends performed. Non-Resettable.
+N0 01 08
+VA303
+Free Vend Value OfSALES_SINCE_ Last Reset
+Value of all free vends performed. Resettable.
+Nc 01 08
+VA304
+Number of Free Vends Since Last Reset
+Number of all free vends performed. Resettable.
+N0 01 06
